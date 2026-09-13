@@ -390,7 +390,7 @@ main{display:block}.section{padding:78px 0 96px;border-top:1px solid var(--line)
       </div>
 
       
-      <section class="journey-book reveal" id="journey">
+      <section class="journey-book" id="journey">
         <div class="journey-hero">
           <div class="journey-hero-grid">
             <div>
@@ -836,7 +836,7 @@ function sortContainer(container){
 }
 sortSelect.addEventListener('change',()=>{sortContainer(document.querySelector('#tvGrid'));sortContainer(document.querySelector('#animeGrid'));});
 
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.08});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.01});
 document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%8)*35+'ms';io.observe(el)});
 
 const themeBtn=document.querySelector('#themeToggle');
