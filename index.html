@@ -1,0 +1,851 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0e1318"><title>The Grand Archive — Goma</title><meta name="description" content="A living personal archive of anime, manga, characters, lessons, memories, video moments and art."><style>
+:root{
+  --bg:#0e1318;
+  --bg2:#151b21;
+  --ink:#f5f2ec;
+  --muted:#a9b0b6;
+  --line:rgba(255,255,255,.12);
+  --line-strong:rgba(255,255,255,.2);
+  --glass:rgba(30,38,47,.48);
+  --glass-soft:rgba(255,255,255,.055);
+  --panel:rgba(255,255,255,.045);
+  --panel-strong:rgba(255,255,255,.075);
+  --shadow:0 28px 70px rgba(0,0,0,.28);
+  --sky:#9fd0ff;
+  --lav:#c5b3ff;
+  --mint:#a6e0cd;
+  --peach:#f5c58c;
+  --coral:#f3a69b;
+  --mx:50%;--my:30%;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;overflow-x:hidden}
+body.light{--bg:#eff2f4;--bg2:#f8f7f3;--ink:#10161c;--muted:#69727a;--line:rgba(14,20,26,.12);--line-strong:rgba(14,20,26,.19);--glass:rgba(250,252,253,.55);--glass-soft:rgba(255,255,255,.55);--panel:rgba(255,255,255,.5);--panel-strong:rgba(255,255,255,.72);--shadow:0 28px 70px rgba(50,61,70,.12)}
+button,input,select{font:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(159,208,255,.28)}
+
+.ambient{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none;background:
+ radial-gradient(45vw 40vw at var(--mx) var(--my),rgba(159,208,255,.12),transparent 70%),
+ radial-gradient(42vw 38vw at 92% 13%,rgba(197,179,255,.12),transparent 68%),
+ radial-gradient(40vw 45vw at 15% 82%,rgba(166,224,205,.08),transparent 72%),
+ linear-gradient(180deg,var(--bg),var(--bg2) 48%,var(--bg));transition:background .35s ease}
+.noise{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitchTiles'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.85'/%3E%3C/svg%3E")}
+.shell{width:min(1440px,calc(100% - 48px));margin:0 auto}
+
+/* Liquid-glass inspired functional layer: navigation and controls stay translucent; content remains the star. */
+.glass{position:relative;background:var(--glass);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 18px 50px rgba(0,0,0,.15);backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%)}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.13),transparent 26%,transparent 72%,rgba(159,208,255,.07));mix-blend-mode:screen}
+
+.topbar-wrap{padding:18px 0 0;position:relative;z-index:20}
+.topbar{min-height:62px;border-radius:24px;display:flex;align-items:center;gap:22px;padding:9px 12px 9px 18px}
+.brand{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.brand-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(145deg,var(--sky),var(--lav));box-shadow:0 0 0 5px rgba(159,208,255,.08)}
+.nav{margin-left:auto;display:flex;align-items:center;gap:4px}
+.nav a{padding:11px 14px;border-radius:15px;color:var(--muted);font-size:13px;font-weight:700;transition:.2s}
+.nav a:hover{color:var(--ink);background:var(--glass-soft)}
+.theme-toggle{width:43px;height:43px;border:1px solid var(--line);border-radius:15px;background:var(--glass-soft);color:var(--ink);cursor:pointer;transition:.2s;position:relative;z-index:1}
+.theme-toggle:hover{transform:translateY(-1px);border-color:var(--line-strong)}
+
+.hero{padding:84px 0 30px;min-height:78vh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(480px,.95fr);gap:52px;align-items:end}
+.hero-copy{padding:36px 0}
+.eyebrow,.section-code{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.eyebrow i{width:26px;height:1px;background:linear-gradient(90deg,var(--mint),transparent)}
+h1{font-size:clamp(64px,8.5vw,132px);line-height:.86;letter-spacing:-.072em;margin:22px 0 30px;font-weight:800;max-width:900px}
+.hero-gradient{background:linear-gradient(100deg,#fff 5%,var(--sky) 42%,var(--lav) 69%,var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}
+body.light .hero-gradient{background:linear-gradient(100deg,#10161c 8%,#3f82bd 42%,#7564c4 70%,#bd754e);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-copy>p{font-size:clamp(17px,1.5vw,21px);line-height:1.62;color:var(--muted);max-width:700px;margin:0}
+.hero-signals{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.signal{padding:10px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--muted)}
+.signal strong{color:var(--ink);font-weight:750}
+.hero-side-art{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:130px;gap:10px;align-self:end}
+.hero-art-card{position:relative;margin:0;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--panel);box-shadow:0 18px 38px rgba(0,0,0,.17);min-height:0;transition:transform .35s cubic-bezier(.2,.75,.2,1),border-color .25s}
+.hero-art-card:hover{transform:translateY(-5px) scale(1.01);border-color:var(--line-strong)}
+.hero-art-card.feature{grid-column:span 2;grid-row:span 2}
+.hero-art-card img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.96) contrast(1.01)}
+.hero-art-card span{position:absolute;left:9px;bottom:9px;padding:6px 9px;border-radius:999px;background:rgba(15,20,26,.56);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);color:#fff;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.hero-art-card.hero-luffy img{object-position:center 22%}.hero-art-card.tall img{object-position:center 18%}
+
+.statement{margin:56px 0 16px;padding:44px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:end}
+.statement h2{font-size:clamp(42px,6vw,88px);line-height:.95;letter-spacing:-.055em;margin:14px 0 0;max-width:900px}
+.statement-copy{font-size:17px;line-height:1.65;color:var(--muted);max-width:590px;margin-left:auto}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:26px;overflow:hidden;margin:28px 0 50px}
+.stat{padding:28px;background:color-mix(in srgb,var(--bg) 94%,white 6%);position:relative;overflow:hidden}
+body.light .stat{background:rgba(255,255,255,.55)}
+.stat .num{font-size:clamp(38px,5vw,68px);font-weight:800;letter-spacing:-.055em;line-height:1}
+.stat .label{margin-top:8px;color:var(--muted);font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+.stat .orb{position:absolute;width:90px;height:90px;border-radius:50%;right:-22px;top:-26px;background:radial-gradient(circle,rgba(159,208,255,.2),transparent 67%);filter:blur(2px)}
+
+.dock-wrap{margin:0 0 64px}.dock{border-radius:24px;padding:10px;display:grid;grid-template-columns:minmax(240px,1fr) auto auto;gap:8px}
+.search{height:48px;border-radius:16px;background:var(--glass-soft);border:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;position:relative;z-index:1}.search svg{width:18px;color:var(--muted)}.search input{width:100%;border:0;outline:0;background:transparent;color:var(--ink);font-size:14px}.search input::placeholder{color:var(--muted)}
+.seg{display:flex;gap:4px;padding:4px;border-radius:16px;background:var(--glass-soft);border:1px solid var(--line);position:relative;z-index:1}.seg button{border:0;background:transparent;color:var(--muted);padding:9px 12px;border-radius:12px;font-weight:750;font-size:12px;cursor:pointer;white-space:nowrap}.seg button.active{background:rgba(255,255,255,.11);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.sort{border:1px solid var(--line);border-radius:16px;padding:0 36px 0 13px;background:var(--glass-soft);color:var(--ink);font-weight:750;outline:0;position:relative;z-index:1}
+
+main{display:block}.section{padding:78px 0 96px;border-top:1px solid var(--line)}.section:first-child{border-top:0}.section-intro{display:grid;grid-template-columns:180px minmax(0,1fr) minmax(280px,.65fr);gap:28px;align-items:start;margin-bottom:38px}.section-number{font-size:clamp(56px,7vw,104px);font-weight:800;letter-spacing:-.06em;line-height:.8;color:rgba(255,255,255,.1)}body.light .section-number{color:rgba(16,22,28,.1)}
+.section-title{font-size:clamp(46px,6vw,86px);line-height:.93;letter-spacing:-.055em;margin:0;font-weight:800}.section-copy{font-size:16px;line-height:1.7;color:var(--muted);max-width:540px;margin:4px 0 0}.section-badge{display:inline-flex;margin-top:20px;padding:9px 11px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+
+.anchor-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 48px}.anchor{min-height:138px;border-radius:26px;padding:22px;display:flex;justify-content:space-between;align-items:flex-end;overflow:hidden}.anchor small{color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.12em}.anchor strong{font-size:clamp(24px,3vw,38px);letter-spacing:-.04em}.anchor .symbol{font-size:32px;opacity:.7}
+
+
+/* Character Impact Journal */
+.impact-journal{margin:0 0 64px;padding:38px;border:1px solid var(--line);border-radius:34px;background:linear-gradient(150deg,color-mix(in srgb,var(--panel-strong) 78%,transparent),color-mix(in srgb,var(--panel) 92%,transparent));box-shadow:var(--shadow);position:relative;overflow:hidden}
+.impact-journal::before{content:"";position:absolute;inset:-20% auto auto 45%;width:52%;height:55%;background:radial-gradient(circle,rgba(159,208,255,.10),transparent 68%);pointer-events:none}
+.impact-head{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:end;margin-bottom:28px;position:relative;z-index:1}
+.impact-head h3{font-size:clamp(42px,6vw,78px);line-height:.93;letter-spacing:-.055em;margin:8px 0 0;max-width:820px}
+.impact-head p{margin:0;color:var(--muted);font-size:16px;line-height:1.68;max-width:580px;justify-self:end}
+.impact-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;position:relative;z-index:1}
+.impact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;position:relative;z-index:1}
+.impact-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:28px;background:color-mix(in srgb,var(--glass) 88%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 16px 40px rgba(0,0,0,.12);backdrop-filter:blur(24px) saturate(145%);-webkit-backdrop-filter:blur(24px) saturate(145%);display:grid;grid-template-columns:190px 1fr;min-height:300px;transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease}
+.impact-card:hover{transform:translateY(-4px);border-color:var(--line-strong);box-shadow:0 24px 55px rgba(0,0,0,.2)}
+.impact-card.feature{grid-template-columns:minmax(240px,.8fr) minmax(0,1.2fr);min-height:440px}
+.impact-photo{position:relative;overflow:hidden;background:var(--panel)}
+.impact-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(7,11,15,.35));pointer-events:none}
+.impact-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s cubic-bezier(.2,.75,.2,1),filter .3s ease;filter:saturate(.98) contrast(1.02)}
+.impact-card:hover .impact-photo img{transform:scale(1.035)}
+.impact-card[data-name="Robin"] .impact-photo img{object-position:center 23%}
+.impact-card[data-name="Ayanokoji"] .impact-photo img{object-position:center 35%}
+.impact-card[data-name="All Might"] .impact-photo img{object-position:center 24%}
+.impact-card[data-name="Rudeus"] .impact-photo img{object-position:center 18%}
+.impact-body{padding:25px 25px 24px;display:flex;flex-direction:column;min-width:0;position:relative}
+.impact-number{font-size:10px;font-weight:850;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.impact-kicker{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--sky);margin-top:15px}
+.impact-card[data-name="Robin"] .impact-kicker{color:var(--lav)}
+.impact-card[data-name="Guts"] .impact-kicker{color:var(--coral)}
+.impact-card[data-name="Zoro"] .impact-kicker{color:var(--mint)}
+.impact-card[data-name="All Might"] .impact-kicker{color:var(--peach)}
+.impact-body h4{font-size:clamp(26px,3vw,40px);letter-spacing:-.045em;line-height:.98;margin:7px 0 12px}
+.impact-card:not(.feature) .impact-body h4{font-size:30px}
+.impact-summary{margin:0;color:var(--muted);font-size:14px;line-height:1.65}
+.impact-feature-grid .impact-summary{font-size:15px;line-height:1.7}
+.impact-quote{margin:18px 0 0;padding:13px 15px;border-left:2px solid var(--sky);background:var(--glass-soft);border-radius:0 15px 15px 0;font-size:14px;font-weight:720;line-height:1.5;color:var(--ink)}
+.impact-card[data-name="Robin"] .impact-quote{border-left-color:var(--lav)}
+.impact-lesson{margin-top:auto;padding-top:19px;display:flex;gap:8px;flex-wrap:wrap}
+.impact-lesson span{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:var(--glass-soft)}
+.impact-note{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.55}
+.impact-endnote{margin-top:16px;display:flex;justify-content:space-between;gap:16px;align-items:center;padding:15px 17px;border-radius:20px;border:1px solid var(--line);background:var(--glass-soft);color:var(--muted);font-size:12px;position:relative;z-index:1}
+.impact-endnote strong{color:var(--ink)}
+@media(max-width:1100px){.impact-head{grid-template-columns:1fr}.impact-head p{justify-self:start}.impact-feature-grid{grid-template-columns:1fr}.impact-grid{grid-template-columns:1fr 1fr}.impact-card.feature{min-height:400px}}
+@media(max-width:760px){.impact-journal{padding:18px;border-radius:28px;margin-bottom:48px}.impact-head{margin-bottom:20px}.impact-head h3{font-size:46px}.impact-grid{grid-template-columns:1fr}.impact-card,.impact-card.feature{grid-template-columns:1fr;min-height:0}.impact-photo{height:240px}.impact-card.feature .impact-photo{height:300px}.impact-body{padding:21px}.impact-feature-grid .impact-summary{font-size:14px}.impact-endnote{align-items:flex-start;flex-direction:column}}
+
+
+
+/* Personal canon chapters */
+.personal-chapters{display:grid;gap:18px;margin:0 0 72px}
+.personal-panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:34px;background:linear-gradient(145deg,color-mix(in srgb,var(--panel-strong) 86%,transparent),color-mix(in srgb,var(--panel) 94%,transparent));box-shadow:var(--shadow)}
+.personal-panel::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.08),transparent 24%,transparent 76%,rgba(159,208,255,.05))}
+.personal-split{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);min-height:520px}
+.personal-visual{position:relative;overflow:hidden;min-height:430px}.personal-visual img{width:100%;height:100%;object-fit:cover;display:block}.personal-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 55%,rgba(14,19,24,.38)),linear-gradient(180deg,transparent 58%,rgba(14,19,24,.42))}
+.personal-copy{padding:42px;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1}.personal-copy h3{font-size:clamp(44px,6vw,82px);line-height:.92;letter-spacing:-.055em;margin:9px 0 20px}.personal-copy>p{color:var(--muted);font-size:16px;line-height:1.72;max-width:680px;margin:0}
+.standard-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:28px}.standard-item{padding:17px;border:1px solid var(--line);border-radius:18px;background:var(--glass-soft)}.standard-item b{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.standard-item span{font-size:13px;line-height:1.55;color:var(--muted)}
+.robin-panel .personal-visual::after{background:linear-gradient(90deg,rgba(14,19,24,.08),rgba(14,19,24,.5)),linear-gradient(180deg,transparent 56%,rgba(14,19,24,.42))}.robin-panel .personal-copy h3{background:linear-gradient(90deg,#fff,var(--lav),var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent}.robin-note{margin-top:24px;padding:18px 20px;border-radius:20px;border:1px solid var(--line);background:var(--glass-soft);font-size:14px;line-height:1.6}.robin-note strong{color:var(--lav)}
+.moments{padding:38px}.moments-head{display:grid;grid-template-columns:1fr .7fr;gap:30px;align-items:end;margin-bottom:26px}.moments-head h3{font-size:clamp(42px,5.8vw,76px);line-height:.94;letter-spacing:-.05em;margin:8px 0 0}.moments-head p{margin:0;color:var(--muted);line-height:1.65}.moments-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.moment{min-height:360px;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:var(--glass-soft);display:flex;flex-direction:column}.moment-img{height:180px;overflow:hidden}.moment-img img{width:100%;height:100%;object-fit:cover;display:block}.moment-body{padding:19px;display:flex;flex-direction:column;gap:9px;flex:1}.moment-index{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:800}.moment h4{margin:0;font-size:23px;letter-spacing:-.035em}.moment p{margin:0;color:var(--muted);font-size:13px;line-height:1.58}.moment-take{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);font-size:12px;line-height:1.5}.moment-take strong{color:var(--mint)}
+@media(max-width:1000px){.personal-split{grid-template-columns:1fr}.personal-visual{height:360px;min-height:0}.moments-grid{grid-template-columns:1fr 1fr}.moments-head{grid-template-columns:1fr}.personal-copy{padding:30px}}
+@media(max-width:640px){.personal-panel{border-radius:28px}.personal-visual{height:300px}.personal-copy{padding:22px}.standard-list{grid-template-columns:1fr}.moments{padding:20px}.moments-grid{grid-template-columns:1fr}.moment{min-height:0}.moment-img{height:210px}}
+
+.spotlight{display:grid;grid-template-columns:1.3fr .7fr;gap:12px;margin:0 0 50px}.spot-card,.taste-card{min-height:330px;border:1px solid var(--line);border-radius:30px;padding:28px;background:var(--panel);position:relative;overflow:hidden}.spot-card{display:flex;flex-direction:column;justify-content:flex-end}.spot-card::before{content:"";position:absolute;right:-7%;top:-30%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,var(--accent),transparent 68%);opacity:.18}.rank{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:var(--muted)}.spot-score{font-size:58px;font-weight:800;letter-spacing:-.06em;margin:22px 0 4px}.spot-score small{font-size:15px;color:var(--muted)}.spot-card h3{font-size:36px;letter-spacing:-.04em;margin:0 0 10px}.spot-card p{max-width:670px;color:var(--muted);line-height:1.6;margin:0}.taste-card{display:flex;flex-direction:column;justify-content:space-between}.taste-card h3{font-size:30px;letter-spacing:-.04em;margin:8px 0}.taste-list{display:grid;gap:15px}.taste{display:grid;grid-template-columns:110px 1fr 34px;align-items:center;gap:12px;font-size:12px;color:var(--muted)}.taste strong{color:var(--ink);text-align:right}.track{height:5px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--sky),var(--lav))}
+
+.subhead{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:50px 0 18px}.subhead h3{margin:0;font-size:clamp(28px,3vw,42px);letter-spacing:-.04em}.subhead p{margin:0;color:var(--muted);max-width:480px;line-height:1.55}.watching-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.watching-card{border:1px solid var(--line);background:var(--panel);border-radius:22px;padding:19px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}.pulse{width:9px;height:9px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 6px rgba(166,224,205,.07)}.watching-card h4{margin:0 0 4px;font-size:17px}.watching-card p{margin:0;color:var(--muted);font-size:13px}.episode{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 9px}
+
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.media-card{position:relative;min-height:235px;border:1px solid var(--line);border-radius:24px;background:var(--panel);padding:20px;display:flex;flex-direction:column;overflow:hidden;transition:transform .25s,border-color .25s}.media-card:hover{transform:translateY(-4px);border-color:var(--line-strong)}.media-card::after{content:"";position:absolute;right:-40px;bottom:-48px;width:140px;height:140px;border-radius:50%;background:var(--accent-glow);filter:blur(42px);opacity:.08}.card-top{display:flex;justify-content:space-between;gap:14px}.index{font-size:10px;color:var(--muted);letter-spacing:.14em;font-weight:800}.score{--score:0;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:conic-gradient(var(--accent) calc(var(--score)*10%),rgba(255,255,255,.07) 0);position:relative}.score::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--bg2)}.score span{z-index:1}.score.tbd{background:rgba(255,255,255,.06)}.media-card h3{font-size:25px;line-height:1.06;letter-spacing:-.035em;margin:30px 0 10px;max-width:88%}.review{color:var(--muted);line-height:1.55;font-size:13px;margin:0 0 18px}.tagrow{margin-top:auto}.tag{font-size:10px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 8px;text-transform:uppercase;letter-spacing:.1em;font-weight:800}.empty{display:none;color:var(--muted);padding:28px 0}
+
+.artwall{padding:76px 0 20px}.artwall-top{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}.artwall-top h3{font-size:clamp(40px,5vw,70px);line-height:.95;letter-spacing:-.05em;margin:0}.artwall-pills{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:620px}.artwall-pills span{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 9px}.art-grid{columns:4 240px;column-gap:10px}.art-shot{position:relative;display:block;width:100%;padding:0;margin:0 0 10px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--panel);break-inside:avoid;cursor:pointer;transition:transform .24s,border-color .24s}.art-shot:hover{transform:translateY(-3px);border-color:var(--line-strong)}.art-shot img{width:100%;height:auto;display:block}.art-shot span{position:absolute;left:10px;bottom:10px;padding:6px 9px;border-radius:999px;background:rgba(14,19,24,.64);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(12px);font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.11em;opacity:0;transform:translateY(5px);transition:.2s}.art-shot:hover span{opacity:1;transform:none}
+
+.manga-shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.book{min-height:260px;padding:22px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,color-mix(in srgb,var(--book-color) 9%,transparent),var(--panel));cursor:pointer;transition:.25s;overflow:hidden}.book:hover{transform:translateY(-3px);border-color:var(--line-strong)}.book .genre{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800}.book h3{font-size:26px;letter-spacing:-.035em;margin:38px 0 12px}.book-note{color:var(--muted);line-height:1.55;font-size:13px;max-height:62px;overflow:hidden;transition:max-height .3s}.book.expanded .book-note{max-height:320px}.tap{display:inline-block;margin-top:18px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.reading-list{display:grid;gap:8px}.reading-row{display:grid;grid-template-columns:10px 1fr auto;align-items:center;gap:15px;padding:17px 18px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}.book-icon{width:6px;height:34px;border-radius:999px;background:var(--book-color)}.reading-row h4{margin:0 0 3px;font-size:15px}.reading-row p{margin:0;font-size:12px;color:var(--muted)}.chapter{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:7px 9px;border-radius:999px}
+
+.lightbox{position:fixed;inset:0;display:none;place-items:center;padding:24px;z-index:100;background:rgba(7,10,13,.78);backdrop-filter:blur(26px) saturate(130%)}.lightbox.open{display:grid}.lightbox-inner{position:relative;max-width:min(94vw,1200px);max-height:92vh}.lightbox img{display:block;max-width:100%;max-height:90vh;border-radius:26px;border:1px solid rgba(255,255,255,.18);box-shadow:0 35px 100px rgba(0,0,0,.46)}.lightbox-close{position:absolute;right:-10px;top:-10px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(24,30,37,.72);backdrop-filter:blur(18px);color:white;font-size:22px;cursor:pointer}
+.footer{border-top:1px solid var(--line);padding:34px 0 52px;display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px}.footer strong{color:var(--ink)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}.reveal.in{opacity:1;transform:none}
+
+@media(max-width:1100px){.hero{grid-template-columns:1fr;min-height:auto}.hero-copy{padding-bottom:4px}.hero-side-art{grid-template-columns:repeat(5,1fr);grid-auto-rows:120px}.hero-art-card.feature{grid-column:span 2;grid-row:span 2}.section-intro{grid-template-columns:110px 1fr}.section-intro>.section-copy-wrap{grid-column:2}.grid{grid-template-columns:repeat(2,1fr)}.spotlight{grid-template-columns:1fr}.art-grid{columns:3 210px}}
+@media(max-width:760px){.shell{width:min(100% - 28px,1440px)}.topbar-wrap{padding-top:10px}.topbar{border-radius:20px;padding-left:13px}.brand span{display:none}.nav{gap:0}.nav a{padding:10px 9px;font-size:11px}.hero{padding-top:56px;gap:24px}.hero-copy{padding:10px 0}h1{font-size:clamp(58px,18vw,86px);margin:18px 0 22px}.hero-copy>p{font-size:16px}.hero-side-art{grid-template-columns:repeat(2,1fr);grid-auto-rows:145px}.hero-art-card.feature{grid-column:span 2;grid-row:span 2}.statement{grid-template-columns:1fr;gap:18px;padding:34px 0}.statement-copy{margin:0}.stats{grid-template-columns:1fr}.dock{grid-template-columns:1fr}.seg{overflow-x:auto}.sort{height:46px}.section{padding:60px 0 72px}.section-intro{grid-template-columns:1fr;gap:12px}.section-number{font-size:54px}.section-intro>.section-copy-wrap{grid-column:auto}.anchor-duo,.watching-grid,.grid,.manga-shelf{grid-template-columns:1fr}.artwall{padding-top:55px}.artwall-top{align-items:start;flex-direction:column}.artwall-pills{justify-content:flex-start}.art-grid{columns:2 145px}.footer{flex-direction:column}.taste{grid-template-columns:100px 1fr 32px}}
+@media(max-width:430px){.nav a{padding:9px 7px;font-size:10px}.theme-toggle{width:40px;height:40px}.hero-side-art{grid-auto-rows:125px;gap:7px}.hero-art-card{border-radius:16px}.stats{margin-bottom:34px}.stat{padding:22px}.art-grid{columns:2 125px;column-gap:7px}.art-shot{margin-bottom:7px;border-radius:16px}.media-card{min-height:220px}.spot-card,.taste-card{border-radius:24px}.section-title{font-size:46px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
+
+
+/* Anime Journey / Living Archive */
+.journey-book{margin:78px 0 74px;position:relative}
+.journey-hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:38px;padding:clamp(28px,5vw,64px);background:linear-gradient(145deg,color-mix(in srgb,var(--panel-strong) 92%,transparent),color-mix(in srgb,var(--glass) 84%,transparent));box-shadow:var(--shadow);backdrop-filter:blur(30px) saturate(150%);-webkit-backdrop-filter:blur(30px) saturate(150%)}
+.journey-hero::before{content:"";position:absolute;width:58%;aspect-ratio:1;border-radius:50%;right:-18%;top:-45%;background:radial-gradient(circle,rgba(159,208,255,.2),rgba(197,179,255,.08) 42%,transparent 70%);pointer-events:none}
+.journey-hero-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr);gap:34px;align-items:end;position:relative;z-index:1}
+.journey-hero h3{font-size:clamp(52px,8vw,112px);line-height:.86;letter-spacing:-.065em;margin:10px 0 20px;max-width:900px}
+.journey-hero .lead{font-size:clamp(17px,2vw,22px);line-height:1.62;color:var(--muted);max-width:760px;margin:0}
+.journey-confession{border:1px solid var(--line);border-radius:28px;padding:24px;background:color-mix(in srgb,var(--glass) 82%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.journey-confession small{display:block;text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:900;color:var(--muted);margin-bottom:10px}
+.journey-confession strong{display:block;font-size:clamp(27px,3vw,44px);line-height:1.05;letter-spacing:-.04em;margin-bottom:12px}
+.journey-confession p{margin:0;color:var(--muted);line-height:1.6}
+.journey-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;position:relative;z-index:1}
+.journey-status span{padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:var(--glass-soft);font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.journey-nav{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 6px;margin:18px 0 34px;scrollbar-width:none}.journey-nav::-webkit-scrollbar{display:none}.journey-nav a{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:10px 13px;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;background:var(--glass-soft)}
+
+.timeline-wrap{margin-top:32px}.timeline-head,.archive-grid-head{display:grid;grid-template-columns:1fr .8fr;gap:24px;align-items:end;margin:0 0 20px}.timeline-head h4,.archive-grid-head h4{font-size:clamp(34px,5vw,62px);line-height:.95;letter-spacing:-.05em;margin:7px 0 0}.timeline-head p,.archive-grid-head p{margin:0;color:var(--muted);line-height:1.65;max-width:560px;justify-self:end}
+.timeline{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;position:relative}.phase{grid-column:span 6;border:1px solid var(--line);border-radius:28px;padding:24px;min-height:240px;background:linear-gradient(145deg,color-mix(in srgb,var(--glass) 86%,transparent),color-mix(in srgb,var(--panel) 96%,transparent));box-shadow:inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);position:relative;overflow:hidden}.phase:nth-child(3n+1){grid-column:span 7}.phase:nth-child(3n+2){grid-column:span 5}.phase .phase-num{font-size:10px;text-transform:uppercase;letter-spacing:.16em;font-weight:900;color:var(--muted)}.phase .phase-year{display:inline-block;margin:16px 0 8px;padding:7px 9px;border-radius:999px;background:var(--glass-soft);border:1px solid var(--line);font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.phase h5{font-size:clamp(25px,3vw,38px);line-height:1;letter-spacing:-.04em;margin:2px 0 12px}.phase p{margin:0;color:var(--muted);line-height:1.64}.phase blockquote{margin:15px 0 0;padding:14px 16px;border-left:2px solid var(--sky);border-radius:0 15px 15px 0;background:var(--glass-soft);font-weight:750;line-height:1.5}.phase-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}.phase-tags span{font-size:10px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+.scene-vault{margin:58px 0 0}.video-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.video-card{border:1px solid var(--line);border-radius:32px;overflow:hidden;background:linear-gradient(145deg,var(--panel-strong),var(--panel));box-shadow:var(--shadow)}.video-frame{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}.video-card video{display:block;width:100%;height:100%;object-fit:cover;background:#000}.video-copy{padding:24px}.video-copy .video-kicker{font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.video-copy h5{font-size:clamp(28px,3.4vw,46px);letter-spacing:-.045em;line-height:1;margin:8px 0 12px}.video-copy p{margin:0;color:var(--muted);line-height:1.65}.emotion-chip{display:inline-flex;margin-top:16px;border:1px solid var(--line);border-radius:999px;padding:8px 10px;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;background:var(--glass-soft)}
+
+.journey-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:54px}.journey-card{border:1px solid var(--line);border-radius:30px;padding:28px;background:linear-gradient(145deg,color-mix(in srgb,var(--panel-strong) 88%,transparent),color-mix(in srgb,var(--glass) 80%,transparent));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}.journey-card h4{font-size:clamp(31px,4vw,52px);letter-spacing:-.05em;line-height:.95;margin:8px 0 20px}.journey-card .mini-copy{color:var(--muted);line-height:1.6;margin:0 0 18px}
+.rank-list{display:grid;gap:8px}.rank-row{display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;padding:13px 14px;border:1px solid var(--line);border-radius:17px;background:var(--glass-soft)}.rank-row .rank{font-size:12px;font-weight:950;letter-spacing:.06em;color:var(--muted)}.rank-row b{font-size:14px}.rank-row small{font-size:10px;color:var(--muted);text-align:right;max-width:180px}.rank-row.top{background:linear-gradient(120deg,rgba(159,208,255,.12),rgba(197,179,255,.08))}
+.rewatch-list{display:grid;gap:8px}.rewatch-row{display:grid;grid-template-columns:minmax(120px,.8fr) 78px 1.4fr;gap:10px;align-items:center;padding:12px 13px;border:1px solid var(--line);border-radius:16px;background:var(--glass-soft);font-size:12px}.rewatch-row b{font-size:13px}.rewatch-row .count{font-weight:900;color:var(--sky)}.rewatch-row span:last-child{color:var(--muted);line-height:1.4}
+.family-note{margin-top:14px;padding:18px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(120deg,rgba(166,224,205,.08),rgba(159,208,255,.06));line-height:1.6;color:var(--muted)}.family-note strong{color:var(--ink)}
+
+.taste-lab{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px}.taste-side{border:1px solid var(--line);border-radius:28px;padding:24px;background:var(--glass-soft)}.taste-side h5{font-size:22px;margin:0 0 16px;letter-spacing:-.03em}.taste-points{display:grid;gap:10px}.taste-point{display:flex;gap:10px;align-items:flex-start;color:var(--muted);line-height:1.5}.taste-point i{font-style:normal;width:22px;flex:0 0 22px}.taste-rule{grid-column:1/-1;border:1px solid var(--line);border-radius:24px;padding:24px;text-align:center;background:linear-gradient(120deg,rgba(159,208,255,.1),rgba(245,197,140,.06));font-size:clamp(24px,3vw,38px);font-weight:850;letter-spacing:-.035em;line-height:1.15}
+
+.misjudged{margin-top:54px}.misjudged-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.mis-card{border:1px solid var(--line);border-radius:30px;overflow:hidden;background:var(--panel);display:grid;grid-template-columns:150px 1fr}.mis-card img{width:100%;height:100%;object-fit:cover;min-height:260px}.mis-body{padding:24px}.mis-body h5{font-size:30px;letter-spacing:-.04em;margin:6px 0 14px}.before-after{display:grid;gap:9px}.before-after div{padding:13px;border:1px solid var(--line);border-radius:16px;background:var(--glass-soft);line-height:1.45;color:var(--muted)}.before-after strong{display:block;color:var(--ink);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+
+.subaru-collage{display:grid!important;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;background:var(--line)}.subaru-collage img{position:relative!important;width:100%!important;height:100%!important;object-fit:cover!important;inset:auto!important}.subaru-collage img:first-child{grid-row:1/-1}.subaru-collage img:nth-child(2),.subaru-collage img:nth-child(3){min-height:0}
+
+.save-file{margin-top:54px;border:1px solid var(--line);border-radius:34px;padding:clamp(28px,5vw,48px);background:linear-gradient(145deg,rgba(159,208,255,.09),rgba(197,179,255,.07),var(--panel));box-shadow:var(--shadow);display:grid;grid-template-columns:.8fr 1.2fr;gap:28px;align-items:start}.save-file h4{font-size:clamp(38px,5vw,70px);line-height:.9;letter-spacing:-.055em;margin:8px 0 16px}.save-file p{color:var(--muted);line-height:1.65;margin:0}.save-console{border:1px solid var(--line);border-radius:24px;padding:20px;background:rgba(4,8,12,.34);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.8;overflow:auto}.save-console b{color:var(--sky);font-weight:800}.save-final{grid-column:1/-1;margin-top:6px;padding-top:22px;border-top:1px solid var(--line);font-size:clamp(20px,2.5vw,31px);font-weight:800;letter-spacing:-.025em;line-height:1.3}
+
+@media(max-width:900px){.journey-hero-grid,.timeline-head,.archive-grid-head,.video-grid,.journey-columns,.misjudged-grid,.save-file{grid-template-columns:1fr}.timeline-head p,.archive-grid-head p{justify-self:start}.timeline{grid-template-columns:1fr}.phase,.phase:nth-child(3n+1),.phase:nth-child(3n+2){grid-column:auto}.taste-lab{grid-template-columns:1fr}.taste-rule{grid-column:auto}.save-final{grid-column:auto}.video-grid{gap:12px}.mis-card{grid-template-columns:130px 1fr}.journey-book{margin-top:58px}}
+@media(max-width:620px){.journey-hero{border-radius:28px;padding:26px 20px}.journey-hero h3{font-size:58px}.journey-confession{padding:18px;border-radius:22px}.phase,.journey-card,.taste-side{padding:20px;border-radius:22px}.rewatch-row{grid-template-columns:1fr 58px}.rewatch-row span:last-child{grid-column:1/-1}.rank-row{grid-template-columns:38px 1fr}.rank-row small{grid-column:2;text-align:left}.mis-card{grid-template-columns:1fr}.mis-card img{height:230px;min-height:0}.save-file{padding:24px 20px;border-radius:26px}.subaru-collage{height:280px}}
+
+</style></head><body>
+<div class="ambient"></div><div class="noise"></div>
+<div class="shell">
+  <div class="topbar-wrap">
+    <header class="topbar glass">
+      <a class="brand" href="#top"><span class="brand-dot"></span><span>THE GRAND ARCHIVE</span></a>
+      <nav class="nav" aria-label="Archive sections"><a href="#anime">Anime</a><a href="#journey">Journey</a><a href="#manga">Manga</a><a href="#tv">Live Action</a></nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark mode">☼</button>
+    </header>
+  </div>
+
+  <section class="hero" id="top">
+    <div class="hero-copy reveal">
+      <div class="eyebrow"><i></i> PERSONAL FICTION ARCHIVE / ANIME FIRST</div>
+      <h1>Stories worth <span class="hero-gradient">keeping.</span></h1>
+      <p>Not a watch list. Not an algorithm. This is the shelf I built from the characters, worlds, panels, lessons and series that stayed with me after the screen went dark.</p>
+      <div class="hero-signals"><span class="signal">North star: <strong>Luffy</strong></span><span class="signal">Fictional weakness: <strong>Robin</strong></span><span class="signal">Character journal: <strong>9 written reflections</strong></span><span class="signal">Status: <strong>still sailing 🏴‍☠️</strong></span></div>
+    </div>
+    <div class="hero-side hero-side-art reveal"><figure class="hero-art-card feature hero-luffy"><img src="assets/images/archive-ccb6a9a7bfaa.jpg" alt="Luffy artwork"><span>Luffy</span></figure><figure class="hero-art-card tall"><img src="assets/images/archive-27e37adb1061.jpg" alt="Robin artwork"><span>Robin</span></figure><figure class="hero-art-card square"><img src="assets/images/archive-2a0f4d144730.jpg" alt="Subaru Natsuki artwork"><span>Subaru</span></figure><figure class="hero-art-card square"><img src="assets/images/archive-4d176ee876f9.jpg" alt="Ayanokoji artwork"><span>Ayanokoji</span></figure><figure class="hero-art-card square"><img src="assets/images/archive-a57a923b161c.jpg" alt="Sanji artwork"><span>Sanji</span></figure><figure class="hero-art-card square"><img src="assets/images/archive-effc696bc2bb.jpg" alt="Zoro artwork"><span>Zoro</span></figure><figure class="hero-art-card square"><img src="assets/images/archive-771f31636a13.jpg" alt="Imu artwork"><span>Imu</span></figure><figure class="hero-art-card square"><img src="assets/images/archive-14f2c73a74f0.jpg" alt="Shakky artwork"><span>Shakky</span></figure><figure class="hero-art-card square"><img src="assets/images/archive-48a489f4b3e6.jpg" alt="Guts artwork"><span>Guts</span></figure></div>
+  </section>
+
+  <section class="statement reveal">
+    <div><div class="section-code">00 / THE POINT OF THE ARCHIVE</div><h2>Some stories are watched. Others become part of your vocabulary.</h2></div>
+    <p class="statement-copy">Anime sits at the center of this place, with manga close behind and live action rounding out the shelf. Ratings matter, but memory matters more. The archive is less about completion and more about what earned a permanent spot.</p>
+  </section>
+
+  <section class="stats reveal" aria-label="Archive statistics">
+    <div class="stat"><div class="orb"></div><div class="num" id="numAnime">0</div><div class="label">Anime tracked</div></div>
+    <div class="stat"><div class="orb"></div><div class="num" id="numManga">0</div><div class="label">Manga logged</div></div>
+    <div class="stat"><div class="orb"></div><div class="num" id="numTv">0</div><div class="label">Live action watched</div></div>
+  </section>
+
+  <div class="dock-wrap reveal">
+    <div class="dock glass">
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input id="searchInput" type="search" placeholder="Search the archive..." autocomplete="off"></label>
+      <div class="seg" id="filterSeg"><button class="active" data-filter="all">All</button><button data-filter="anime">Anime</button><button data-filter="manga">Manga</button><button data-filter="tv">Live Action</button></div>
+      <select class="sort" id="sortSelect" aria-label="Sort titles"><option value="rank">Best rated</option><option value="az">A → Z</option><option value="za">Z → A</option></select>
+    </div>
+  </div>
+
+  <main>
+    <section class="section category" id="anime" data-category="anime">
+      <div class="section-intro reveal">
+        <div class="section-number">01</div>
+        <div><div class="section-code">THE CENTER OF GRAVITY</div><h2 class="section-title">Anime first.<br>Always.</h2><span class="section-badge" id="animeBadge"></span></div>
+        <div class="section-copy-wrap"><p class="section-copy">This is the heart of the archive: finished series, current watches, the characters I keep returning to, and the art that made those worlds feel bigger than a screen.</p></div>
+      </div>
+      <div class="anchor-duo reveal">
+        <div class="anchor glass"><div><small>Favorite in all fiction</small><br><strong>Monkey D. Luffy</strong></div><div class="symbol">☀︎</div></div>
+        <div class="anchor glass"><div><small>Permanent crush exemption</small><br><strong>Nico Robin</strong></div><div class="symbol">✦</div></div>
+      </div>
+
+      <section class="impact-journal reveal" id="character-impact">
+        <div class="impact-head">
+          <div><div class="section-code">CHARACTER IMPACT / PERSONAL NOTES</div><h3>The people I borrowed something from.</h3></div>
+          <p>This is not a power ranking. It is the part of the archive about what stayed with me after the episode or chapter ended: loyalty, discipline, resilience, emotional control, hope, second chances and the tiny habits that somehow follow you back into real life.</p>
+        </div>
+        <div class="impact-feature-grid"><article class="impact-card glass feature reveal" data-name="Luffy">
+      <div class="impact-photo"><img src="assets/images/archive-abd700507e94.jpg" alt="Luffy character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">01 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">North star / favorite in all fiction</div>
+        <h4>Luffy</h4>
+        <p class="impact-summary">The GOAT for me. What makes Luffy special is not just the gears, fights or ridiculous move names. It is the way he stays loyal to his morals, protects his people at any cost, keeps the same dream even when the world laughs, and keeps moving after moments that should have broken him. He also helped me loosen the grip of overthinking and enjoy the part of life that is actually happening now.</p>
+        <div class="impact-quote">People’s dreams never end.</div>
+        <div class="impact-lesson"><span>Dream loudly</span><span>Protect your people</span><span>Never give up</span><span>Go with the flow</span></div>
+        <div class="impact-note">The Wano fits and Gear 2 → Gear 5 hype are absolutely part of the case too.</div>
+      </div>
+    </article><article class="impact-card glass feature reveal" data-name="Robin">
+      <div class="impact-photo"><img src="assets/images/archive-aa49e105a9b8.jpg" alt="Robin character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">02 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Emotional core / crush in all fiction</div>
+        <h4>Robin</h4>
+        <p class="impact-summary">Yes, she is my fictional crush. But the story is why she stayed. Robin survives Ohara, years of being hunted and the belief that people will eventually abandon her. Then the Straw Hats show her the opposite: she is worth crossing the world for. Enies Lobby turns that entire life of running into one request to keep living, and that is the moment she completely stole my heart.</p>
+        <div class="impact-quote">“I want to live.”</div>
+        <div class="impact-lesson"><span>Belonging</span><span>Survival</span><span>Hope</span><span>Found family</span></div>
+        <div class="impact-note">For me, Robin is proof that finding the right people can change the meaning of everything that came before.</div>
+      </div>
+    </article></div>
+        <div class="impact-grid"><article class="impact-card glass reveal" data-name="Zoro">
+      <div class="impact-photo"><img src="assets/images/archive-35168e6160f0.jpg" alt="Zoro character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">03 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Will without noise</div>
+        <h4>Zoro</h4>
+        <p class="impact-summary">Zoro does not need a giant speech every episode. His sheer will, refusal to quit and unwavering loyalty to his captain do the talking. The lesson I take from him is simple: keep aiming higher, keep going, and one day you will look back and barely recognize how far you have climbed.</p>
+        
+        <div class="impact-lesson"><span>Discipline</span><span>Loyalty</span><span>Aim higher</span></div>
+        
+      </div>
+    </article><article class="impact-card glass reveal" data-name="Guts">
+      <div class="impact-photo"><img src="assets/images/archive-8fcc529199b3.jpg" alt="Guts character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">04 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Endure</div>
+        <h4>Guts</h4>
+        <p class="impact-summary">Emotionally and psychologically, one of the strongest journeys in fiction for me. The amount of trauma and cruelty thrown at Guts is almost absurd, but the point is that suffering never gets the final word. He keeps prevailing. Also, the armor, the presence and that gigantic sword are just ridiculously cool.</p>
+        
+        <div class="impact-lesson"><span>Resilience</span><span>Keep moving</span><span>Defy the dark</span></div>
+        
+      </div>
+    </article><article class="impact-card glass reveal" data-name="Ayanokoji">
+      <div class="impact-photo"><img src="assets/images/archive-fbd6867bb0db.jpg" alt="Ayanokoji character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">05 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Control before reaction</div>
+        <h4>Ayanokoji</h4>
+        <p class="impact-summary">I never expected a manipulative high-school character to land this high for me. What I actually admire is his emotional control, awareness, selective self-revelation and ability to handle complex situations without needing attention. I do not admire treating people like tools, but the composure and decision-making are areas I want to sharpen in myself.</p>
+        
+        <div class="impact-lesson"><span>Awareness</span><span>Composure</span><span>Read the room</span><span>Know what to reveal</span></div>
+        
+      </div>
+    </article><article class="impact-card glass reveal" data-name="Subaru Natsuki">
+      <div class="impact-photo subaru-collage">
+        <img src="assets/images/archive-2a0f4d144730.jpg" alt="Subaru Natsuki artwork one" loading="lazy">
+        <img src="assets/images/archive-5e5a888f6f6e.jpg" alt="Subaru Natsuki artwork two" loading="lazy">
+        <img src="assets/images/archive-92c9d2ca4fcb.jpg" alt="Subaru Natsuki artwork three" loading="lazy">
+      </div>
+      <div class="impact-body">
+        <div class="impact-number">06 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Try again, even when nobody remembers</div>
+        <h4>Subaru Natsuki</h4>
+        <p class="impact-summary">I completely misjudged him at first. What looked like weakness became the exact reason I respected him: Subaru can be terrified, humiliated, broken and still walk back into a nightmare because the people around him matter more than his pride. Return by Death is not a cool reset button to me anymore. It is loneliness with a checkpoint.</p>
+        <div class="impact-quote">Fine. One more try.</div>
+        <div class="impact-lesson"><span>Try again</span><span>Emotional courage</span><span>Carry the unseen</span><span>Stay human</span></div>
+        <div class="impact-note">Biggest opinion reversal in the archive. The charges have officially been withdrawn. 😂</div>
+      </div>
+    </article><article class="impact-card glass reveal" data-name="All Might">
+      <div class="impact-photo"><img src="assets/images/archive-bebc9862da2a.jpg" alt="All Might character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">07 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Symbol of hope</div>
+        <h4>All Might</h4>
+        <p class="impact-summary">All Might works for me because of what he represents. People see him and believe help has arrived. That final stand and iconic raised fist hit harder than a long personality essay ever could. Sometimes what you symbolize to other people matters just as much as what you say.</p>
+        
+        <div class="impact-lesson"><span>Hope</span><span>Presence</span><span>Reassurance</span></div>
+        
+      </div>
+    </article><article class="impact-card glass reveal" data-name="Rudeus">
+      <div class="impact-photo"><img src="assets/images/archive-98ff25101429.jpg" alt="Rudeus character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">08 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Face reality</div>
+        <h4>Rudeus</h4>
+        <p class="impact-summary">A deeply flawed guy, but the second-chance premise left me with a very real lesson: real life does not hand us a reincarnation button. Eventually we have to stop running from our problems, accept who we are, face reality head-on and try to live without regrets.</p>
+        
+        <div class="impact-lesson"><span>Face it</span><span>No reset button</span><span>Live deliberately</span></div>
+        <div class="impact-note">The three wives are not the lesson. That part is just Rudeus winning the lottery. 😭</div>
+      </div>
+    </article><article class="impact-card glass reveal" data-name="Sanji">
+      <div class="impact-photo"><img src="assets/images/archive-a57a923b161c.jpg" alt="Sanji character artwork" loading="lazy"></div>
+      <div class="impact-body">
+        <div class="impact-number">09 / CHARACTER IMPACT</div>
+        <div class="impact-kicker">Respect the craft</div>
+        <h4>Sanji</h4>
+        <p class="impact-summary">Sanji is a hardworking cook who gives his best, carries two backstories and, yes, is still a catastrophic simp. The most practical thing he left with me is respect for food: do not waste what is on the table, because there is real work and value behind every meal.</p>
+        
+        <div class="impact-lesson"><span>Hard work</span><span>Respect food</span><span>Give your best</span></div>
+        
+      </div>
+    </article></div>
+        <div class="impact-endnote"><span><strong>Not finished.</strong> These are the nine with written reflections so far.</span><span>The archive can keep growing whenever another character earns a page.</span></div>
+      </section>
+
+      <div class="personal-chapters" id="personal-canon">
+        <section class="personal-panel personal-split reveal" id="luffy-standard">
+          <div class="personal-visual"><img src="assets/images/archive-abd700507e94.jpg" alt="Monkey D. Luffy"></div>
+          <div class="personal-copy"><div class="section-code">THE LUFFY STANDARD</div><h3>The benchmark.</h3><p>Luffy is the character I end up comparing everyone else against, not because he is perfect, but because his values barely move when life gets ugly. He dreams loudly, protects his people without hesitation, follows his heart, gets back up after being shattered, and somehow makes freedom feel practical instead of abstract.</p><div class="standard-list"><div class="standard-item"><b>Dream without apology</b><span>If the dream matters, say it out loud even when people laugh.</span></div><div class="standard-item"><b>Protect your people</b><span>Loyalty means showing up when it is costly, not only when it is convenient.</span></div><div class="standard-item"><b>Move before overthinking</b><span>Not every uncertainty deserves a hundred imaginary disasters before the first step.</span></div><div class="standard-item"><b>Turn pain into strength</b><span>After breaking, rebuild with a reason to become stronger rather than staying inside the loss.</span></div></div></div>
+        </section>
+
+        <section class="personal-panel personal-split robin-panel reveal" id="robin-corner">
+          <div class="personal-visual"><img src="assets/images/archive-aa49e105a9b8.jpg" alt="Nico Robin"></div>
+          <div class="personal-copy"><div class="section-code">THE ROBIN CORNER / DIPLOMATIC IMMUNITY</div><h3>The one who stole the archive.</h3><p>Yes, she is the all-fiction crush. But the reason Robin stayed with me is much bigger than that. Her story is about surviving a world that taught her she should not exist, then slowly discovering people who refuse to let her disappear. Intelligence, calmness, dark humor, resilience and found family all meet in one character.</p><div class="robin-note"><strong>The moment that sealed it:</strong> Enies Lobby. After spending years believing she was a burden, she finally allowed herself to say that she wanted to live. That scene is the point where Robin stopped being just a character I liked and became one I genuinely cared about.</div></div>
+        </section>
+
+        <section class="personal-panel moments reveal" id="moments">
+          <div class="moments-head"><div><div class="section-code">MOMENTS THAT CHANGED SOMETHING</div><h3>Scenes I carried back into real life.</h3></div><p>Not necessarily the biggest fights or the prettiest animation. These are the beats that left behind an idea, a habit, or a way of looking at things after the episode ended.</p></div>
+          <div class="moments-grid">
+            <article class="moment"><div class="moment-img"><img src="assets/images/archive-abd700507e94.jpg" alt="Luffy"></div><div class="moment-body"><div class="moment-index">01 / LUFFY</div><h4>After Ace</h4><p>Watching Luffy reach the point where even his dream felt meaningless, then remember the people still counting on him, made his recovery hit harder than any victory.</p><div class="moment-take"><strong>What stayed:</strong> being broken is not the same as being finished.</div></div></article>
+            <article class="moment"><div class="moment-img"><img src="assets/images/archive-aa49e105a9b8.jpg" alt="Robin"></div><div class="moment-body"><div class="moment-index">02 / ROBIN</div><h4>“I want to live.”</h4><p>Her fear was not only death. It was becoming such a burden that the people she loved would eventually hate her. The Straw Hats answered that fear by choosing her anyway.</p><div class="moment-take"><strong>What stayed:</strong> sometimes hope begins with allowing yourself to ask for it.</div></div></article>
+            <article class="moment"><div class="moment-img"><img src="assets/images/archive-bebc9862da2a.jpg" alt="All Might"></div><div class="moment-body"><div class="moment-index">03 / ALL MIGHT</div><h4>The final standing pose</h4><p>What I remember most is not the mechanics of the battle. It is what he represented to everyone watching him: the idea that one person can become a symbol of reassurance.</p><div class="moment-take"><strong>What stayed:</strong> hope can matter even before it solves anything.</div></div></article>
+            <article class="moment"><div class="moment-img"><img src="assets/images/archive-8fcc529199b3.jpg" alt="Guts"></div><div class="moment-body"><div class="moment-index">04 / GUTS</div><h4>Keep moving anyway</h4><p>His story keeps stacking trauma on top of trauma, yet the part that matters to me is that he keeps prevailing rather than letting suffering become his final identity.</p><div class="moment-take"><strong>What stayed:</strong> resilience does not have to look graceful.</div></div></article>
+            <article class="moment"><div class="moment-img"><img src="assets/images/archive-fbd6867bb0db.jpg" alt="Ayanokoji"></div><div class="moment-body"><div class="moment-index">05 / AYANOKOJI</div><h4>Control before reaction</h4><p>The trait I keep returning to is his ability to stay composed, reveal only what he chooses, and understand a situation before advertising what he feels.</p><div class="moment-take"><strong>What stayed:</strong> emotional control creates room to think.</div></div></article>
+            <article class="moment"><div class="moment-img"><img src="assets/images/archive-35168e6160f0.jpg" alt="Zoro"></div><div class="moment-body"><div class="moment-index">06 / ZORO</div><h4>Aim higher</h4><p>Zoro is less about speeches for me and more about sheer will, loyalty and continually raising the ceiling of what he expects from himself.</p><div class="moment-take"><strong>What stayed:</strong> progress can look impossible only because you have not reached the future version of yourself yet.</div></div></article>
+          </div>
+        </section>
+      </div>
+
+      
+      <section class="journey-book reveal" id="journey">
+        <div class="journey-hero">
+          <div class="journey-hero-grid">
+            <div>
+              <div class="section-code">MY ANIME JOURNEY / LIVING CHAPTER</div>
+              <h3>From “just cartoons”<br>to stories I carry.</h3>
+              <p class="lead">I used to think anime was something I would never care about. Then Berserk cracked the door, One Piece kicked it off the hinges, and the rest of the journey kept widening what I thought a story could do.</p>
+            </div>
+            <aside class="journey-confession">
+              <small>THE OLD TAKE / AGED HORRIBLY</small>
+              <strong>“Anime is for losers.”</strong>
+              <p>I even made fun of a friend for watching it. Years later, some of the most important stories, lessons, memories and emotions in my life came from anime. Perfect full-circle punishment. 💀</p>
+            </aside>
+          </div>
+          <div class="journey-status"><span>Status: still sailing 🏴‍☠️</span><span>Favorite: One Piece 👑</span><span>Biggest surprise: Re:Zero 🔁</span><span>Current era: anime + manga</span></div>
+        </div>
+
+        <div class="journey-nav" aria-label="Anime journey quick links">
+          <a href="#journey-timeline">Timeline</a><a href="#scene-vault">Scenes</a><a href="#current-canon">Top 10</a><a href="#rewatch-history">Rewatches</a><a href="#taste-formula">Taste formula</a><a href="#misjudged">Misjudged</a><a href="#save-file">Save file</a>
+        </div>
+
+        <div class="timeline-wrap" id="journey-timeline">
+          <div class="timeline-head"><div><div class="section-code">THE JOURNEY</div><h4>How the rabbit hole happened.</h4></div><p>Not a clean genre progression. More like one door opening into eight completely different rooms.</p></div>
+          <div class="timeline">
+            <article class="phase"><div class="phase-num">PHASE 00 · THE DOOR CRACKS OPEN</div><span class="phase-year">2023</span><h5>Berserk: The Golden Age</h5><p>One of my first proper steps into anime, right after my A/Ls. I did not become an anime fan overnight, but Guts planted one idea that stayed with me: life can be brutally unfair and you can still keep moving.</p><blockquote>You do not need an easy life to keep moving forward.</blockquote><div class="phase-tags"><span>Resilience</span><span>Guts</span><span>The seed</span></div></article>
+            <article class="phase"><div class="phase-num">PHASE 01 · POINT OF NO RETURN</div><span class="phase-year">July 2024</span><h5>One Piece</h5><p>I finished the available story in roughly three months and immediately regretted speedrunning it. Nothing felt the same afterward. Luffy turned dreaming loudly from something I found ridiculous into something I deeply respect.</p><blockquote>Dream loudly. Protect your people. Keep moving.</blockquote><div class="phase-tags"><span>10/10</span><span>3× rewatches</span><span>Life-changing</span></div></article>
+            <article class="phase"><div class="phase-num">PHASE 02 · CHASING THE HIGH</div><span class="phase-year">Nov 2024 → early 2025</span><h5>AOT → JJK → Demon Slayer</h5><p>This run helped me discover my personal filter. Beautiful animation can absolutely get my attention, but it cannot make me care by itself. I need the story and characters to leave something behind.</p><blockquote>Pretty animation can get my attention. Emotion is what makes me stay.</blockquote></article>
+            <article class="phase"><div class="phase-num">PHASE 03 · RETURNING TO THE GRAND LINE</div><span class="phase-year">Apr → Dec 2025</span><h5>One Piece rewatch #2</h5><p>This time I watched with my sister. Suddenly I was not just revisiting scenes, I was waiting for somebody else to reach the emotional landmines while pretending to act normal. The story became part of family life too.</p><div class="phase-tags"><span>Family memory</span><span>Rewatch changed the story</span></div></article>
+            <article class="phase"><div class="phase-num">PHASE 04 · THE GRIND ERA</div><span class="phase-year">Jan → Mar 2026</span><h5>Black Clover</h5><p>Asta is basically a walking refusal to accept the limit he was given. Loud? Extremely. But underneath it is something I respect: work until the impossible becomes less impossible.</p><div class="phase-tags"><span>Outwork the limit</span><span>Watched with my sister</span></div></article>
+            <article class="phase"><div class="phase-num">PHASE 05 · WHY IS THIS SCHOOL ANIME SO GOOD?</div><span class="phase-year">2026</span><h5>Classroom of the Elite</h5><p>Ayanokoji became one of my favorites because of awareness, composure, observation and control over what he reveals. I want the discipline, not the dehumanization.</p><blockquote>Take the discipline. Leave the dehumanization.</blockquote><div class="phase-tags"><span>Personal top 3</span><span>Rewatched 2×</span></div></article>
+            <article class="phase"><div class="phase-num">PHASE 06 · TRAUMA, RESET, REPEAT</div><span class="phase-year">June 2026 → present</span><h5>Re:Zero</h5><p>I started by calling Subaru a dumb simp and ended up respecting him for exactly the emotions I first mistook for weakness. Return by Death stopped looking like a power and started looking like a curse nobody else can remember.</p><blockquote>Fine. One more try.</blockquote><div class="phase-tags"><span>9.7/10</span><span>Biggest surprise</span><span>Emotional damage: extreme</span></div></article>
+            <article class="phase"><div class="phase-num">PHASE 07 · WAIT... I LIKE ROMANCE?</div><span class="phase-year">July 2026</span><h5>The Fragrant Flower Blooms with Dignity</h5><p>My first proper romance anime dismantled another assumption. The relationship felt sincere and emotionally mature enough that I went straight into the manga afterward.</p><blockquote>If the story is good, the genre does not matter.</blockquote></article>
+            <article class="phase"><div class="phase-num">PHASE 08 · STORIES I NEVER WOULD HAVE TRIED</div><span class="phase-year">Current era</span><h5>The doors stay open.</h5><p>Mushoku Tensei, Frieren, Mob Psycho 100, Chainsaw Man, Hell's Paradise, Smoking Behind the Supermarket with You and more kept widening the range. Anime ended up teaching me to try things before judging them, which is hilarious considering how this journey began.</p><div class="phase-tags"><span>Anime + manga</span><span>Genre walls removed</span></div></article>
+          </div>
+        </div>
+
+        <div class="scene-vault" id="scene-vault">
+          <div class="archive-grid-head"><div><div class="section-code">SCENES THAT REFUSE TO LEAVE</div><h4>Two clips. Zero explanation needed.</h4></div><p>Except I am going to explain them anyway, because these are exactly the moments this archive exists to remember.</p></div>
+          <div class="video-grid">
+            <article class="video-card reveal">
+              <div class="video-frame"><video controls playsinline preload="metadata" poster="media/luffy_poster.jpg"><source src="media/luffy_beat_louder.mp4" type="video/mp4">Your browser does not support HTML5 video.</video></div>
+              <div class="video-copy"><div class="video-kicker">01 / ONE PIECE · GEAR 5 VS KAIDO</div><h5>“Come on, heartbeat. Beat louder.”</h5><p>Probably my favorite One Piece clip of all time. The drums, Luffy remembering the people of Wano, the exhaustion, Kaido warning that continuing could kill him, and Luffy answering with basically zero fear. Even thinking about it still gives me chills.</p><span class="emotion-chip">Pure joy + defiance</span></div>
+            </article>
+            <article class="video-card reveal">
+              <div class="video-frame"><video controls playsinline preload="metadata" poster="media/zoro_poster.jpg"><source src="media/zoro_vs_king.mp4" type="video/mp4">Your browser does not support HTML5 video.</video></div>
+              <div class="video-copy"><div class="video-kicker">02 / ONE PIECE · ZORO VS KING</div><h5>Sometimes the fight is the speech.</h5><p>No essay needed here. The choreography, impact, animation and sheer Zoro presence make this one of the best fights in anime for me. It is the kind of sequence where analysis can wait until after the adrenaline wears off.</p><span class="emotion-chip">Aura + spectacle</span></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="journey-columns" id="current-canon">
+          <section class="journey-card"><div class="section-code">MY CURRENT TOP 10</div><h4>Personal canon.</h4><p class="mini-copy">Personal, unstable, emotionally biased, and absolutely allowed to change.</p><div class="rank-list"><div class="rank-row top"><span class="rank">🥇</span><b>One Piece</b><small>World + emotion + characters + personal impact</small></div><div class="rank-row top"><span class="rank">🥈</span><b>Re:Zero</b><small>Brutal emotion and the biggest MC opinion reversal</small></div><div class="rank-row top"><span class="rank">🥉</span><b>Classroom of the Elite</b><small>Strategy, psychology and Ayanokoji</small></div><div class="rank-row "><span class="rank">4</span><b>Attack on Titan</b><small>Buildup, mystery and scale</small></div><div class="rank-row "><span class="rank">5</span><b>Death Note</b><small>Psychological battle, especially the L era</small></div><div class="rank-row "><span class="rank">6</span><b>The Fragrant Flower Blooms with Dignity</b><small>Romance that changed my mind about the genre</small></div><div class="rank-row "><span class="rank">7</span><b>Black Clover</b><small>Motivating, fun and better on rewatch</small></div><div class="rank-row "><span class="rank">8</span><b>Berserk: Golden Age</b><small>Dark fantasy and unforgettable endurance</small></div><div class="rank-row "><span class="rank">9</span><b>Smoking Behind the Supermarket with You</b><small>A refreshingly different story</small></div><div class="rank-row "><span class="rank">10</span><b>Hunter × Hunter</b><small>Adventure and a power system that earned its place</small></div></div></section>
+          <section class="journey-card" id="rewatch-history"><div class="section-code">REWATCH HISTORY</div><h4>The stories gained company.</h4><p class="mini-copy">At some point, rewatching stopped being only about revisiting a story and became about who was sitting beside me.</p><div class="rewatch-list"><div class="rewatch-row"><b>One Piece</b><span class="count">3×</span><span>Second watch with my sister; third with my mother, around Episode 987.</span></div><div class="rewatch-row"><b>Attack on Titan</b><span class="count">2×</span><span>I still love the journey more than the ending.</span></div><div class="rewatch-row"><b>Jujutsu Kaisen</b><span class="count">2×</span><span>The animation remains ridiculous.</span></div><div class="rewatch-row"><b>Black Clover</b><span class="count">2×</span><span>Second watch with my sister.</span></div><div class="rewatch-row"><b>Classroom of the Elite</b><span class="count">2×</span><span>Still one of my favorite surprise discoveries.</span></div><div class="rewatch-row"><b>Re:Zero</b><span class="count">2× / ongoing</span><span>Rewatch started with my sister.</span></div></div><div class="family-note"><strong>The unexpected part:</strong> One Piece with my sister, then again with my mother. Re:Zero again with my sister. Those memories now belong to the people I watched them with as much as the shows themselves.</div></section>
+        </div>
+
+        <div class="journey-columns" id="taste-formula">
+          <section class="journey-card"><div class="section-code">MY PERSONAL TASTE FORMULA</div><h4>What earns a place.</h4><div class="taste-lab"><div class="taste-side"><h5>✅ Usually works on me</h5><div class="taste-points"><div class="taste-point"><i>✦</i><span>Strong emotion that feels earned.</span></div><div class="taste-point"><i>✦</i><span>Characters with conviction.</span></div><div class="taste-point"><i>✦</i><span>Worldbuilding and lore that reward attention.</span></div><div class="taste-point"><i>✦</i><span>Unpredictable stories and psychological tension.</span></div><div class="taste-point"><i>✦</i><span>Long-term growth, failure, suffering and adaptation.</span></div></div></div><div class="taste-side"><h5>❌ Fastest ways to lose me</h5><div class="taste-points"><div class="taste-point"><i>×</i><span>Generic, template-like stories.</span></div><div class="taste-point"><i>×</i><span>Plots where I do not care about anybody.</span></div><div class="taste-point"><i>×</i><span>Predictability disguised by pretty production.</span></div><div class="taste-point"><i>×</i><span>Development that was never earned.</span></div><div class="taste-point"><i>×</i><span>A huge build-up followed by a fumbled payoff.</span></div></div></div><div class="taste-rule">Animation can impress me.<br>Characters and emotion are what make me remember.</div></div></section>
+          <section class="journey-card"><div class="section-code">HOW ANIME CHANGED ME</div><h4>The things I kept.</h4><div class="standard-list"><div class="standard-item"><b>Luffy · Dream without apologizing</b><span>I do not need everyone else to understand the dream before I move toward it.</span></div><div class="standard-item"><b>Zoro · Progress looks boring first</b><span>Train. Improve. Repeat.</span></div><div class="standard-item"><b>Guts · Continuing can be the victory</b><span>Not every fight is about winning beautifully.</span></div><div class="standard-item"><b>Robin · A terrible chapter is not the ending</b><span>People can still find somewhere they belong.</span></div><div class="standard-item"><b>Subaru · Pain is not the opposite of strength</b><span>You can be afraid, exhausted and still choose another attempt.</span></div><div class="standard-item"><b>Ayanokoji · Composure creates room to think</b><span>More control over reactions, not fewer emotions as a human.</span></div><div class="standard-item"><b>Rudeus · No reincarnation button</b><span>If something needs to change, face it in this life.</span></div></div></section>
+        </div>
+
+        <div class="misjudged" id="misjudged">
+          <div class="archive-grid-head"><div><div class="section-code">CHARACTERS I COMPLETELY MISJUDGED</div><h4>The apology desk.</h4></div><p>Two of my strongest opinions began as completely wrong first impressions. The archive keeps receipts.</p></div>
+          <div class="misjudged-grid">
+            <article class="mis-card"><img src="assets/images/archive-5e5a888f6f6e.jpg" alt="Subaru Natsuki"><div class="mis-body"><div class="section-code">SUBARU NATSUKI</div><h5>Charges withdrawn. 😂</h5><div class="before-after"><div><strong>First impression</strong>“Bro is a dumb-ass simp and a loser.”</div><div><strong>Current opinion</strong>The emotional qualities I disliked are part of what makes him loyal, selfless and painfully human. He carries memories of deaths and failures nobody else can remember, then still chooses another attempt.</div></div></div></article>
+            <article class="mis-card"><img src="assets/images/archive-20ee3060ce60.jpg" alt="Monkey D. Luffy"><div class="mis-body"><div class="section-code">MONKEY D. LUFFY</div><h5>The idiot had a point.</h5><div class="before-after"><div><strong>First impression</strong>“Why does this idiot keep announcing his dream?”</div><div><strong>Current opinion</strong>Because he is not embarrassed by wanting something enormous. I was. Luffy made me realize some of my limits existed only because I had mentally built them first.</div></div></div></article>
+          </div>
+        </div>
+
+        <section class="save-file" id="save-file">
+          <div><div class="section-code">CURRENT SAVE FILE</div><h4>Still sailing.</h4><p>I thought I was only looking for entertainment. Somewhere along the way, I found stories I could carry with me.</p></div>
+          <div class="save-console"><b>PLAYER:</b> Goma<br><b>MAIN QUEST:</b> Become a better version of myself<br><b>FAVORITE CHARACTER:</b> Monkey D. Luffy<br><b>FAVORITE STORY:</b> One Piece<br><b>CURRENT OBSESSION LEVEL:</b> Completely cooked<br><b>REWATCH MODE:</b> Permanently enabled<br><b>MANGA ACCESS:</b> Unlocked<br><b>ROMANCE GENRE:</b> Unexpectedly unlocked<br><b>ISEKAI DAMAGE:</b> Re:Zero happened<br><b>NEXT ARC:</b> Unknown</div>
+          <div class="save-final">FROM “ANIME IS FOR LOSERS” TO THIS. <span style="color:var(--muted);font-weight:650">Anime did not magically fix my life. Certain stories just gave me new ways to think about it.</span><br><br>TO BE CONTINUED... ☠️</div>
+        </section>
+      </section>
+
+      <div class="spotlight reveal" id="animeSpotlight"></div>
+      <div class="subhead reveal"><div><div class="section-code">CURRENT SIGNAL</div><h3>Now watching</h3></div><p>Whatever currently has the remote, the tabs, or my attention hostage.</p></div>
+      <div class="watching-grid" id="animeWatching"></div>
+      <div class="subhead reveal"><div><div class="section-code">RATINGS / COMPLETED</div><h3>The anime shelf</h3></div><p>Personal scores, personal bias, zero committee meetings.</p></div>
+      <div class="grid" id="animeGrid"></div>
+      <div class="empty" id="animeEmpty">No anime in the archive matches that search.</div>
+
+      <div class="artwall reveal">
+        <div class="artwall-top"><div><div class="section-code">THE VISUAL ARCHIVE</div><h3>Saved because<br>it hit different.</h3></div><div class="artwall-pills"><span>Luffy</span><span>Robin</span><span>Imu</span><span>Shakky</span><span>Ayanokoji</span><span>Zoro</span><span>Sanji</span><span>Chopper</span><span>Kaido</span><span>Guts</span><span>All Might</span><span>Subaru</span><span>Frieren</span></div></div>
+        <div class="art-grid" id="onePieceArt"></div>
+      </div>
+    </section>
+
+    <section class="section category" id="manga" data-category="manga">
+      <div class="section-intro reveal">
+        <div class="section-number">02</div>
+        <div><div class="section-code">SOURCE MATERIAL</div><h2 class="section-title">Manga.<br>Closer to the ink.</h2><span class="section-badge" id="mangaBadge"></span></div>
+        <div class="section-copy-wrap"><p class="section-copy">Where the source material lives: completed reads, current chapters, and stories that work differently when the pacing belongs to the page instead of the screen.</p></div>
+      </div>
+      <div class="manga-shelf" id="mangaDone"></div>
+      <div class="empty" id="mangaEmpty">No manga on the shelf matches that search.</div>
+      <div class="subhead reveal"><div><div class="section-code">STILL BEING WRITTEN</div><h3>Current chapters</h3></div><p>The shelf that changes while the story is still alive.</p></div>
+      <div class="reading-list" id="mangaReading"></div>
+    </section>
+
+    <section class="section category" id="tv" data-category="tv">
+      <div class="section-intro reveal">
+        <div class="section-number">03</div>
+        <div><div class="section-code">BEYOND ANIMATION</div><h2 class="section-title">Live action.<br>The other shelf.</h2><span class="section-badge" id="tvBadge"></span></div>
+        <div class="section-copy-wrap"><p class="section-copy">Crime, mystery, fantasy, K-drama and everything else that survived the same test: was it memorable enough to keep talking about after the finale?</p></div>
+      </div>
+      <div class="grid" id="tvGrid"></div>
+      <div class="empty" id="tvEmpty">Nothing in the live-action shelf matches that search.</div>
+    </section>
+  </main>
+
+  <footer class="footer"><span><strong>The Grand Archive.</strong> Built from rewatches, reads, ratings and saved art.</span><span>Luffy sets the standard. Robin still gets diplomatic immunity.</span></footer>
+</div>
+<div class="lightbox" id="artLightbox" aria-hidden="true"><div class="lightbox-inner"><button class="lightbox-close" id="lightboxClose" aria-label="Close image">×</button><img id="lightboxImg" alt="Expanded artwork"></div></div>
+<script>
+const TV = [
+  {t:"Money Heist", s:"8", b:"Iconic heist show — love the characters, but it got weaker every season."},
+  {t:"Narcos", s:"8.5", b:"Loved how they adapted Pablo Escobar's real story — the acting was out of this world."},
+  {t:"Lupin", s:"7", b:"Omar Sy carries this on pure charisma — goated acting, liked the story."},
+  {t:"Vincenzo", s:"9", b:"Doesn't even feel like a typical K-drama, a tier above — so good from start to end."},
+  {t:"Peaky Blinders", s:"7", b:"Badass story with a superb main character, acting on another level."},
+  {t:"Dexter", s:"7.5", b:"Start was so good I was hooked, but it kept going downhill from there."},
+  {t:"Reacher", s:"9", b:"Love this show — cool, engaging stories, glad it keeps getting renewed."},
+  {t:"Diablero", s:"8", b:"Genuinely enjoyed the story — a fresh breath of air."},
+  {t:"Sisyphus: The Myth", s:"8.5", b:"One of the best sci-fi K-dramas ever — too bad it wasn't renewed for a season 2."},
+  {t:"Taxi Driver", s:"7", b:"Love the concept and the story — it was interesting."},
+  {t:"The Sinner", s:"5", b:"It's mid."},
+  {t:"Spectros", s:"7", b:"Enjoyed the spirits and the different concepts."},
+
+  {t:"Crash Landing on You", s:"9.1", b:"My favorite K-drama of all time — couldn't take my eyes off it from the start. #1 favorite."},
+  {t:"It's Okay Not to Be Okay", s:"8", b:"Really loved the characters and the show. #3 favorite K-drama."},
+  {t:"Sweet Home", s:"6", b:"It's alright."},
+  {t:"Alchemy of Souls", s:"9", b:"Love this from start to end — love Natsu, Jinwoo, everyone. #2 favorite K-drama."},
+  {t:"Alice in Borderland", s:"7", b:"Really enjoyed season one, but from season two on it became mid."},
+  {t:"Squid Game", s:"7", b:"It's alright, but doesn't deserve the hype people gave it."},
+  {t:"All of Us Are Dead", s:"6", b:"It's alright, didn't get the hype everyone was talking about."},
+  {t:"Move to Heaven", s:"7", b:"Genuinely enjoyed the show."},
+  {t:"Girl from Nowhere", s:"8.8", b:"Love this show, Nanno is really cool — hate that it got cancelled and rebooted."},
+  {t:"Girl from Nowhere Reboot", s:"5", b:"Decent story, decent actor, but compared to the original it was nothing."},
+  {t:"Holo Love", s:"5", b:"It's alright."},
+  {t:"Descendants of the Sun", s:"8", b:"Genre-defining hit — military romance with real chemistry, aged into a classic."},
+  {t:"Dark Desire", s:"5", b:"Boring."},
+  {t:"Blood Ride", s:"5", b:"It's alright."},
+  {t:"Controls", s:null, b:"Lesser-known — don't have a strong read on this one yet."},
+
+  {t:"Dark", s:null, b:"Still in progress — need to get back to it."},
+  {t:"Umbrella Academy", s:"6.5", b:"Became ass over time."},
+  {t:"The Originals", s:"8", b:"One of my favorites — love Elijah, Hayley, and Klaus."},
+  {t:"The Vampire Diaries", s:"7.8", b:"Kept dragging into dumb parts, but genuinely loved the characters — especially Elena, Damon, and Stefan."},
+  {t:"Locke & Key", s:"6.5", b:"It's alright, seems interesting."},
+  {t:"Sweet Tooth", s:"6.8", b:"It's a good show."},
+  {t:"Wednesday", s:"5", b:"Season 2 became worse and wasn't worth watching."},
+  {t:"Manifest", s:"7.8", b:"It's alright, has an interesting story."},
+  {t:"Lucifer", s:"8.9", b:"Genuinely loved this show and Tom Ellis's acting — the ending was decent too."},
+  {t:"Sherlock", s:"8.9", b:"One of the most engaging shows — the acting and cast were incredible."},
+  {t:"The Irregulars", s:"5", b:"It's alright."},
+  {t:"Behind Her Eyes", s:"7", b:"It's alright, the ending is messed up though."},
+  {t:"Invisible City", s:"5", b:"It's alright."},
+
+  {t:"Never Have I Ever", s:"6.5", b:"First season is good, but it gets more boring after that."},
+  {t:"13 Reasons Why", s:"8.8", b:"Hit me from the start — love the cast and acting, especially Bryce."},
+  {t:"On My Block", s:"7.5", b:"Really enjoyed how they all grow up through an interesting story."},
+  {t:"Atypical", s:"5", b:"For me it's mid."},
+  {t:"Ginny & Georgia", s:"6", b:"It's alright."},
+  {t:"Teenage Bounty Hunters", s:"5.5", b:"The story seems fun."},
+  {t:"The End of the F**king World", s:"8", b:"Genuinely underrated — not boring at all."},
+  {t:"Sex/Life", s:"6", b:"It's alright, but Ruby is super cute though."},
+  {t:"Outer Banks", s:"5", b:"It's alright, just mid."},
+  {t:"Teen Wolf", s:null, b:"Not enough info yet."},
+
+  {t:"Ash vs Evil Dead", s:"8", b:"One of the best horror/slasher shows — no boring moment."},
+  {t:"Slasher", s:"6.5", b:"Had some scenes that gave me chills for a while."},
+  {t:"Insatiable", s:"4.5", b:"It's alright."},
+  {t:"Rain", s:"8.5", b:"Genuinely good story with a good ending."},
+  {t:"Biohackers", s:"4", b:"Not good — it was boring."},
+  {t:"Brand New Cherry Flavour", s:"5", b:"It's alright, just forgettable."},
+  {t:"Post Mortem", s:null, b:"Not enough info yet."},
+
+  {t:"The Walking Dead", s:"8", b:"A legend for me — ups and downs, but I love the cast and their connection."},
+  {t:"The Walking Dead: The Ones Who Live", s:"7.5", b:"Rick Grimes the GOAT was back — can't wait for Daryl to see him."},
+  {t:"The Walking Dead: Dead City", s:"8", b:"Love how Negan and Maggie fight every time they meet — kind of hot, I guess."},
+  {t:"The Walking Dead: Daryl Dixon", s:"8", b:"Loved seeing Daryl and Carol again — story's a little weak, but who cares."},
+
+  {t:"Gotham", s:"8", b:"One of the best TV series DC has produced — engaging story."},
+  {t:"Daredevil", s:"9", b:"Charlie Cox is excellent, the hallway fight set a new bar — one of the best superhero shows made."},
+  {t:"Daredevil: Born Again", s:"9", b:"Everybody knew this would be a masterpiece, and Marvel didn't disappoint — just as good as the OG."},
+  {t:"Punisher", s:"9.2", b:"Even better than Daredevil for me — Frank's sad backstory, badass but kind and broken."},
+  {t:"Altered Carbon", s:"8.5", b:"Great plot and a well-thought-out world — don't know why it was cancelled."},
+  {t:"How to Sell Drugs Online (Fast)", s:"7", b:"Super underrated."},
+  {t:"Cobra Kai", s:"6.5", b:"Alright, decent story."},
+
+  {t:"Black Mirror", s:"7.5", b:"Some episodes are really good, some are super dumb."},
+  {t:"Stranger Things", s:"5", b:"Dumbass, Disney-fied ending after all that waiting — genuinely embarrassing."},
+  {t:"The Witcher", s:"7", b:"Cavill was superb — once he was replaced, the story went downhill and I stopped watching."},
+  {t:"Maid", s:"5", b:"Heavy but excellent — one of the most grounded portrayals of single-parenthood on this list."},
+  {t:"The Five Juanas", s:null, b:"Soapy mystery with telenovela energy."},
+
+  {t:"One Piece (Live Action)", s:"8.8", b:"Landed better than expected for a live-action anime adaptation — has its own charm."}
+];
+
+const ANIME_DONE = [
+  {t:"One Piece", s:"10", tag:"Completed", b:"The GOAT, no debate. Perfect worldbuilding, and Luffy's one of the best MCs ever. Currently on a 3rd rewatch through Wano."},
+  {t:"Berserk", s:"9", tag:"Completed", b:"One of the greatest stories ever written. The '97 anime did it justice — everything since has been a visual disaster."},
+  {t:"Demon Slayer", s:"7", tag:"Completed", b:"Story's bland and straightforward, but the animation is some of the best in anime history."},
+  {t:"Jujutsu Kaisen", s:"7.5", tag:"Completed", b:"Crazy animation but honestly overrated story with no real emotional depth. Gojo's still iconic though."},
+  {t:"Attack on Titan", s:"8", tag:"Completed", b:"Incredible build-up, dumb immature ending. Eren never got real character growth beyond hatred."},
+  {t:"SPY x Family", s:"6", tag:"Completed", b:"Wholesome and fun, a bit slow-paced, perfect for light viewing. Anya is iconic."},
+  {t:"Solo Leveling", s:"7", tag:"Completed", b:"Simple power-fantasy MC, nothing groundbreaking, but it knows exactly what it is and delivers."},
+  {t:"Kaiju No. 8", s:"5", tag:"Completed", b:"Unique MC premise sets it apart, but the story hasn't gone deep enough yet."},
+  {t:"Dan Da Dan", s:"7.5", tag:"Completed", b:"Good and entertaining so far — just hoping the manga's later arcs don't get dragged out."},
+  {t:"Frieren", s:"7", tag:"Completed", b:"Not the usual cup of tea, but slow, reflective, and genuinely refreshing."},
+  {t:"Black Clover", s:"8", tag:"Completed", b:"Underrated. Borrows Naruto vibes but builds its own identity well. Watched it twice."},
+  {t:"Hell's Paradise", s:"8.5", tag:"Completed", b:"Underrated gem — great concept, solid pacing, some of the best animation of its season."},
+  {t:"Death Note", s:"9.5*", tag:"Completed", b:"Peak until L dies — first half is a 9.5, second half drops to a 5. Yagami's ending was a letdown."},
+  {t:"Gachiakuta", s:"7.5", tag:"Completed", b:"Solid vibes and a cool concept. Enjoying it."},
+  {t:"Toughen Up, Takamine-kun", s:"6.5", tag:"Completed", b:"Alright so far but moving too slow — needs to find its direction and commit."},
+  {t:"Mob Psycho 100", s:"8", tag:"Completed", b:"Solid start to finish. One of the better 'power isn't everything' stories out there."},
+  {t:"Sentenced to Be a Hero", s:"7", tag:"Completed", b:"Genuinely interesting concept, watching how the Goddess storyline develops."},
+  {t:"Cyberpunk: Edgerunners", s:"7", tag:"Completed", b:"Short and decent. Sad ending, but it fits the world."},
+  {t:"RIN: Daughters of Mnemosyne", s:"6.5", tag:"Completed", b:"Dark, unusual premise. Not for everyone, but unique for what it is."},
+  {t:"Fire Force", s:"7", tag:"Completed", b:"Worldbuilding feels inconsistent, but the core concept is genuinely interesting."},
+  {t:"Chainsaw Man", s:"7", tag:"Completed", b:"Genuinely good and gorgeously animated — but we all know how disappointing the ending turns out."},
+  {t:"Fragrant Flower Blooms with Dignity", s:"9", tag:"Completed", b:"Real, mature, slow-burn romance. Feels like actual people falling for each other, no gimmicks."},
+  {t:"Smoking Behind the Supermarket with You", s:"9", tag:"Completed", b:"One of the best things watched recently — a genuine breath of fresh air."},
+  {t:"Re:Zero", s:"9.5", tag:"Completed", b:"Boring start, then everything gets wild around ep 6. Subaru's torment makes him one of the most compelling MCs around."},
+  {t:"Mushoku Tensei", s:"9.2", tag:"Completed", b:"Peak isekai. Weird start, but the worldbuilding and characters are second only to One Piece."},
+  {t:"Classroom of the Elite", s:"9.4", tag:"Completed", b:"Never expected to love a school anime this much. Ayanokoji is goated — season 5 can't come soon enough."}
+];
+
+const ANIME_NOW = [
+  {t:"Bleach", s:"Ep 25", tag:"Watching", b:"Slow start, pushing through to Soul Society before making a real judgment."},
+  {t:"Witch Hat Atelier", s:"Ep 6", tag:"Watching", b:"Visually superb with an engaging story — can't wait for more episodes."},
+  {t:"Hunter x Hunter", s:"Ep 61", tag:"Watching", b:"Okay so far, not blown away yet — holding out for the Chimera Ant arc."},
+  {t:"My Hero Academia", s:"Ep 92", tag:"Watching", b:"Picked it back up and it's peak now. Watching it together with my sister, 7/10 so far."},
+  {t:"Black Torch", s:"Ep 3", tag:"Watching", b:"Brand new, only a few episodes out — too early to feel anything strong yet."}
+];
+
+const MANGA_DONE = [
+  {t:"Chainsaw Man", g:"Dark / Psych", b:"The ending was a big letdown and felt rushed — but the devil concepts were genuinely cool."},
+  {t:"Black Clover", g:"Shonen", b:"It's alright. Loved Asta becoming Wizard King, but the ending felt rushed and kind of Disney."},
+  {t:"Demon Slayer", g:"Shonen", b:"Story's alright."},
+  {t:"The Flowers of Evil", g:"Dark / Psych", b:"Masterpiece."},
+  {t:"Adabana", g:"Mystery / Thriller", b:"Solid murder-mystery / crime drama."},
+  {t:"Harem End", g:"Dark / Psych", b:"Harem-genre parody with a horror-comedy twist."},
+  {t:"My Broken Mariko", g:"Emotional / Dark", b:"Another heartbreaking friend story — ended unclearly."}
+];
+
+const MANGA_NOW = [
+  {t:"One Piece", g:"Shonen", c:"Ch. 1191"},
+  {t:"Berserk", g:"Dark / Psych", c:"Ch. 214"},
+  {t:"Smoking Behind the Supermarket with You", g:"Romance", c:"Ch. 63", n:"caught up — next ch. Aug 25"},
+  {t:"The Fragrant Flower Blooms with Dignity", g:"Romance", c:"Ch. 138"},
+  {t:"Your Lie in April", g:"Emotional", c:"Ch. 20"},
+  {t:"Goodnight Punpun", g:"Dark / Psych", c:"Ch. 12"},
+  {t:"After the Rain", g:"Romance", c:"Ch. 4"},
+  {t:"Solo Leveling", g:"Action / Fantasy", c:"Ch. 110"},
+  {t:"Omniscient Reader", g:"Action / Fantasy", c:"Ch. 14"},
+  {t:"Choujin X", g:"Dark Fantasy", c:"Ch. 0", n:"just started"},
+  {t:"Chi no Wadachi", g:"Dark / Psych", c:"Ch. 83"},
+  {t:"Deadman Wonderland", g:"Dark / Psych", c:"Ch. 1", n:"just started"},
+  {t:"Murcielago", g:"Action", c:"Ch. 1", n:"just started"},
+  {t:"BIBLIOMANIA", g:"Dark / Psych", c:"Ch. 3"},
+  {t:"I Want to Eat Your Pancreas", g:"Emotional", c:"Ch. 1"},
+  {t:"Homunculus", g:"Dark / Psych", c:"not started"},
+  {t:"Gantz", g:"Action", c:"Ch. 5", n:"looks superb"},
+  {t:"20th Century Boys", g:"Mystery / Thriller", c:"Ch. 1"},
+  {t:"Claymore", g:"Action", c:"Ch. 1"},
+  {t:"Manhole", g:"Mystery / Thriller", c:"Ch. 3", n:"biological horror + police thriller"},
+  {t:"My Broken Mariko", g:"Emotional / Dark", c:"Ch. 1"},
+  {t:"Welcome Back, Alice", g:"Dark / Psych", c:"Ch. 0", n:"new, Oshimi Shuzo"},
+  {t:"Smother Me", g:"Action / Thriller", c:"Ch. 1", n:"new, Araki-recommended"}
+];
+
+const CHARACTER_ART = [
+  {who:'Luffy', alt:'Luffy artwork 1', src:'assets/images/archive-20ee3060ce60.jpg'},
+  {who:'Luffy', alt:'Luffy artwork 2', src:'assets/images/archive-b987e089c330.jpg'},
+  {who:'Luffy', alt:'Luffy artwork 3', src:'assets/images/archive-ccb6a9a7bfaa.jpg'},
+  {who:'Luffy', alt:'Luffy artwork 4', src:'assets/images/archive-0a7839339d6c.jpg'},
+  {who:'Luffy', alt:'Luffy artwork 5', src:'assets/images/archive-b4b6e35d0cc3.jpg'},
+  {who:'Luffy', alt:'Luffy artwork 6', src:'assets/images/archive-c0786ca4acfc.jpg'},
+  {who:'Luffy', alt:'Luffy artwork 7', src:'assets/images/archive-98eb96f39223.jpg'},
+  {who:'Robin', alt:'Robin artwork 8', src:'assets/images/archive-2ebc037413f3.jpg'},
+  {who:'Robin', alt:'Robin artwork 9', src:'assets/images/archive-e846c59fdb9f.jpg'},
+  {who:'Robin', alt:'Robin artwork 10', src:'assets/images/archive-dbb4a7ca3d80.jpg'},
+  {who:'Robin', alt:'Robin artwork 11', src:'assets/images/archive-1bbe968701db.jpg'},
+  {who:'Robin', alt:'Robin artwork 12', src:'assets/images/archive-f4b16850d2f3.jpg'},
+  {who:'Robin', alt:'Robin artwork 13', src:'assets/images/archive-4c7c8f972cc4.jpg'},
+  {who:'Robin', alt:'Robin artwork 14', src:'assets/images/archive-9446af0fc6b2.jpg'},
+  {who:'Robin', alt:'Robin artwork 15', src:'assets/images/archive-0afdf51d1ee8.jpg'},
+  {who:'Robin', alt:'Robin artwork 16', src:'assets/images/archive-1f1c076dcf2e.jpg'},
+  {who:'Robin', alt:'Robin artwork 17', src:'assets/images/archive-805e615739bf.jpg'},
+  {who:'Robin', alt:'Robin artwork 18', src:'assets/images/archive-f4c159b213dc.jpg'},
+  {who:'Robin', alt:'Robin artwork 19', src:'assets/images/archive-2e1366c30533.jpg'},
+  {who:'Robin', alt:'Robin artwork 20', src:'assets/images/archive-27e37adb1061.jpg'},
+  {who:'Imu', alt:'Imu artwork 1', src:'assets/images/archive-771f31636a13.jpg'},
+  {who:'Luffy', alt:'Luffy action artwork 2', src:'assets/images/archive-207b4caffb8a.jpg'},
+  {who:'Shakky', alt:'Shakky artwork 1', src:'assets/images/archive-14f2c73a74f0.jpg'},
+  {who:'Ayanokoji', alt:'Ayanokoji artwork 4', src:'assets/images/archive-4d176ee876f9.jpg'},
+  {who:'Ayanokoji', alt:'Ayanokoji artwork 5', src:'assets/images/archive-7d61abe31df3.jpg'},
+  {who:'Zoro', alt:'Zoro artwork 6', src:'assets/images/archive-94d4c536ac7c.jpg'},
+  {who:'Zoro', alt:'Zoro artwork 7', src:'assets/images/archive-effc696bc2bb.jpg'},
+  {who:'Robin', alt:'Robin close-up artwork', src:'assets/images/archive-5d1806dc58db.jpg'},
+  {who:'One Piece Girls', alt:'One Piece girls splash artwork', src:'assets/images/archive-938e6d939f6b.jpg'},
+  {who:'Luffy', alt:'Luffy sketch collage artwork', src:'assets/images/archive-efd539012e8e.jpg'},
+  {who:'One Piece', alt:'One Piece logo and crew artwork', src:'assets/images/archive-eafe5194e541.jpg'},
+  {who:'Straw Hat Crew', alt:'Straw Hat crew panel artwork', src:'assets/images/archive-ca4b2e9308c9.jpg'},
+  {who:'One Piece 1000 Logs', alt:'One Piece 1000 logs artwork', src:'assets/images/archive-9111d7e55849.jpg'},
+  {who:'Luffy & Nami', alt:'Luffy and Nami funny artwork', src:'assets/images/archive-47969f55f43b.jpg'},
+  {who:'Robin', alt:'Robin pastel artwork', src:'assets/images/archive-b6709c9b87c7.jpg'},
+  {who:'One Piece', alt:'One Piece dramatic collage artwork', src:'assets/images/archive-dff41f3c2451.jpg'},
+  {who:'Shirahoshi', alt:'Shirahoshi underwater artwork', src:'assets/images/archive-1e1e3636042f.jpg'},
+  {who:'Luffy', alt:'Luffy gear 4 red artwork', src:'assets/images/archive-52c7fa002259.jpg'},
+  {who:'Sanji', alt:'Sanji flame artwork', src:'assets/images/archive-3e5b993d7a03.jpg'},
+  {who:'Anime', alt:'Blue-eyed anime girl flower artwork', src:'assets/images/archive-3d017f7508b7.jpg'},
+  {who:'Robin', alt:'Robin soft watercolor artwork', src:'assets/images/archive-cd626304354d.jpg'},
+  {who:'Luffy', alt:'Luffy intense close-up artwork', src:'assets/images/archive-e85510a7cc3a.jpg'},
+  {who:'Robin', alt:'Robin black dress artwork', src:'assets/images/archive-cbdeeaf74172.jpg'},
+  {who:'Robin', alt:'Robin kimono artwork', src:'assets/images/archive-240e4c0f69e0.jpg'},
+  {who:'Luffy', alt:'Gear 5 Luffy moonlight artwork', src:'assets/images/archive-b8068b7f81a2.jpg'},
+  {who:'Ayanokoji', alt:'Ayanokoji chess piece artwork', src:'assets/images/archive-0f08fe88568a.jpg'},
+  {who:'Frieren', alt:'Frieren group landscape artwork', src:'assets/images/archive-c6de18f6f1aa.jpg'}
+,
+  {who:'Guts', alt:'Guts dark artwork', src:'assets/images/archive-48a489f4b3e6.jpg'},
+  {who:'Robin', alt:'Robin with chibi Straw Hats', src:'assets/images/archive-495360987552.jpg'},
+  {who:'All Might', alt:'All Might manga collage', src:'assets/images/archive-97a928a1d6c9.jpg'},
+  {who:'Guts', alt:'Guts red mark collage', src:'assets/images/archive-7a44b66f5e0e.jpg'},
+  {who:'All Might', alt:'All Might hero poster', src:'assets/images/archive-66601ea74ecb.jpg'},
+  {who:'Zoro', alt:'Zoro green aura attack', src:'assets/images/archive-780be14600f9.jpg'},
+  {who:'Straw Hats', alt:'One Piece crew collage', src:'assets/images/archive-e423760cf041.jpg'},
+  {who:'Ayanokoji', alt:'Ayanokoji puppet master', src:'assets/images/archive-02099d3c7254.jpg'},
+  {who:'Robin', alt:'Robin night poster', src:'assets/images/archive-86d819d54d05.jpg'},
+  {who:'Straw Hats', alt:'One Piece memory collage', src:'assets/images/archive-0dc6d6e3371b.jpg'},
+  {who:'Worst Generation', alt:'Luffy Law and Kid poster', src:'assets/images/archive-f29993113d5a.jpg'},
+  {who:'Chopper', alt:'Chopper Christmas artwork', src:'assets/images/archive-19b51411e8de.jpg'},
+  {who:'Kaido', alt:'Kaido manga dragon sketch', src:'assets/images/archive-0dd5d3ea7b99.jpg'},
+  {who:'Robin', alt:'Robin black dress sketch', src:'assets/images/archive-9f81191a81f4.jpg'},
+  {who:'Straw Hats', alt:'Straw Hats stacked black and white sketch', src:'assets/images/archive-b5f4d19a0d20.jpg'},
+  {who:'Straw Hats', alt:'Straw Hats full crew portrait', src:'assets/images/archive-ddb422aa2261.jpg'},
+  {who:'Straw Hats', alt:'Straw Hats manga collage sketch', src:'assets/images/archive-85208becf0d3.jpg'},
+  {who:'Straw Hats', alt:'Straw Hats New Year picnic', src:'assets/images/archive-a135c363b8c2.jpg'},
+  {who:'Robin', alt:'Robin close up portrait', src:'assets/images/archive-f78b5977dccb.jpg'},
+  {who:'Robin', alt:'Robin with Chopper', src:'assets/images/archive-cbf06d2a286f.jpg'},
+  {who:'Luffy', alt:'Gear 5 Luffy ocean painting', src:'assets/images/archive-bedcb4908633.jpg'},
+  {who:'Subaru', alt:'Subaru Natsuki artwork 1', src:'assets/images/archive-2a0f4d144730.jpg'},
+  {who:'Subaru', alt:'Subaru Natsuki artwork 2', src:'assets/images/archive-5e5a888f6f6e.jpg'},
+  {who:'Subaru', alt:'Subaru Natsuki artwork 3', src:'assets/images/archive-92c9d2ca4fcb.jpg'}
+];
+
+const COLORS = ["#8bc5ff","#ff9b88","#b8a3ff","#8ed9c2","#f3c487","#eab0c8"];
+const colorAt = i => COLORS[i % COLORS.length];
+const numericScore = s => s == null ? null : parseFloat(String(s));
+const sortRated = arr => [...arr].sort((a,b)=>(numericScore(b.s)??-1)-(numericScore(a.s)??-1));
+const esc = v => String(v ?? "").replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+function animateNum(el, target){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){el.textContent=target;return}
+  const start=performance.now(), dur=950;
+  function frame(now){const p=Math.min(1,(now-start)/dur);el.textContent=Math.floor((1-Math.pow(1-p,3))*target);if(p<1)requestAnimationFrame(frame);else el.textContent=target}
+  requestAnimationFrame(frame);
+}
+
+const tvSorted = sortRated(TV);
+const animeSorted = sortRated(ANIME_DONE);
+const total = TV.length + ANIME_DONE.length + ANIME_NOW.length + MANGA_DONE.length + MANGA_NOW.length;
+animateNum(document.querySelector('#numTv'), TV.length);
+animateNum(document.querySelector('#numAnime'), ANIME_DONE.length + ANIME_NOW.length);
+animateNum(document.querySelector('#numManga'), MANGA_DONE.length + MANGA_NOW.length);
+document.querySelector('#tvBadge').textContent = TV.length + ' watched';
+document.querySelector('#animeBadge').textContent = (ANIME_DONE.length + ANIME_NOW.length) + ' tracked';
+document.querySelector('#mangaBadge').textContent = (MANGA_DONE.length + MANGA_NOW.length) + ' logged';
+
+function mediaCard(item, i, category){
+  const score=numericScore(item.s), accent=colorAt(i + (category==='anime'?1:0));
+  return `<article class="media-card reveal item" data-category="${category}" data-title="${esc(item.t).toLowerCase()}" data-score="${score??-1}" style="--accent:${accent};--accent-glow:${accent}">
+    <div class="card-top"><span class="index">${category.toUpperCase()} · ${String(i+1).padStart(2,'0')}</span>${score!=null?`<div class="score" style="--score:${Math.min(10,score)}"><span>${esc(item.s)}</span></div>`:`<div class="score tbd"><span>TBD</span></div>`}</div>
+    <h3>${esc(item.t)}</h3><p class="review">${esc(item.b)}</p>
+    <div class="tagrow"><span class="tag">${score!=null?'Rated':'Unrated'}</span></div>
+  </article>`;
+}
+
+document.querySelector('#tvGrid').innerHTML = tvSorted.map((x,i)=>mediaCard(x,i,'tv')).join('');
+document.querySelector('#animeGrid').innerHTML = animeSorted.map((x,i)=>mediaCard(x,i,'anime')).join('');
+
+const topAnime=animeSorted[0];
+const scored=ANIME_DONE.map(x=>numericScore(x.s)).filter(x=>x!=null);
+const avg=(scored.reduce((a,b)=>a+b,0)/scored.length).toFixed(1);
+document.querySelector('#animeSpotlight').innerHTML = `
+  <article class="spot-card" style="--accent:${COLORS[2]}"><div class="rank">Highest-rated anime in the archive</div><div class="spot-score">${esc(topAnime.s)} <small>/10</small></div><h3>${esc(topAnime.t)}</h3><p>${esc(topAnime.b)}</p></article>
+  <aside class="taste-card"><div><div class="rank" style="font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-weight:800">Taste profile</div><h3>Anime pulse</h3></div>
+    <div class="taste-list"><div class="taste"><span>Average score</span><div class="track"><div class="fill" style="width:${avg*10}%"></div></div><strong>${avg}</strong></div>
+      <div class="taste"><span>Completed</span><div class="track"><div class="fill" style="width:${Math.min(100,ANIME_DONE.length*3.3)}%"></div></div><strong>${ANIME_DONE.length}</strong></div>
+      <div class="taste"><span>Watching now</span><div class="track"><div class="fill" style="width:${Math.min(100,ANIME_NOW.length*14)}%"></div></div><strong>${ANIME_NOW.length}</strong></div></div>
+  </aside>`;
+
+document.querySelector('#animeWatching').innerHTML = ANIME_NOW.map((x,i)=>`<article class="watching-card reveal item" data-category="anime" data-title="${esc(x.t).toLowerCase()}" data-score="-1"><div class="pulse"></div><div><h4>${esc(x.t)}</h4><p>${esc(x.b)}</p></div><span class="episode">${esc(x.s)}</span></article>`).join('');
+
+document.querySelector('#mangaDone').innerHTML = MANGA_DONE.map((x,i)=>`<article class="book reveal item" data-category="manga" data-title="${esc(x.t).toLowerCase()}" data-score="-1" style="--book-color:${colorAt(i+2)}" tabindex="0"><div class="genre">${esc(x.g)}</div><h3>${esc(x.t)}</h3><p class="book-note">${esc(x.b)}</p><span class="tap">click to expand</span></article>`).join('');
+document.querySelectorAll('.book').forEach(b=>{ const toggle=()=>b.classList.toggle('expanded'); b.addEventListener('click',toggle); b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}}); });
+
+document.querySelector('#mangaReading').innerHTML = MANGA_NOW.map((x,i)=>`<article class="reading-row reveal item" data-category="manga" data-title="${esc(x.t).toLowerCase()}" data-score="-1" style="--book-color:${colorAt(i+3)}"><div class="book-icon"></div><div><h4>${esc(x.t)}</h4><p>${esc(x.g)}${x.n?` · ${esc(x.n)}`:''}</p></div><span class="chapter">${esc(x.c)}</span></article>`).join('');
+
+
+document.querySelector('#onePieceArt').innerHTML = CHARACTER_ART.map((x,i)=>`<button class="art-shot reveal" type="button" data-full="${x.src}" aria-label="Open ${esc(x.alt)}"><img src="${x.src}" alt="${esc(x.alt)}" loading="lazy"><span>${esc(x.who)}</span></button>`).join('');
+
+const artLightbox=document.querySelector('#artLightbox');
+const lightboxImg=document.querySelector('#lightboxImg');
+const closeLightbox=()=>{artLightbox.classList.remove('open');artLightbox.setAttribute('aria-hidden','true');lightboxImg.removeAttribute('src')};
+document.querySelectorAll('.art-shot').forEach(btn=>btn.addEventListener('click',()=>{lightboxImg.src=btn.dataset.full;artLightbox.classList.add('open');artLightbox.setAttribute('aria-hidden','false')}));
+document.querySelector('#lightboxClose').addEventListener('click',closeLightbox);
+artLightbox.addEventListener('click',e=>{if(e.target===artLightbox) closeLightbox()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&artLightbox.classList.contains('open')) closeLightbox()});
+
+const search=document.querySelector('#searchInput');
+const filterButtons=[...document.querySelectorAll('#filterSeg button')];
+const sortSelect=document.querySelector('#sortSelect');
+let activeFilter='all';
+function applyFilters(){
+  const q=search.value.trim().toLowerCase();
+  document.querySelectorAll('.category').forEach(sec=>{
+    const cat=sec.dataset.category;
+    const categoryVisible=activeFilter==='all'||activeFilter===cat;
+    sec.style.display=categoryVisible?'block':'none';
+  });
+  document.querySelectorAll('.item').forEach(el=>{
+    const okCat=activeFilter==='all'||el.dataset.category===activeFilter;
+    const okText=!q||el.dataset.title.includes(q)||el.textContent.toLowerCase().includes(q);
+    el.style.display=(okCat&&okText)?'':'none';
+  });
+  ['tv','anime','manga'].forEach(cat=>{
+    const sec=document.querySelector(`#${cat}`); if(!sec||sec.style.display==='none') return;
+    const any=[...sec.querySelectorAll('.item')].some(x=>x.style.display!=='none');
+    const e=document.querySelector(`#${cat}Empty`); if(e)e.style.display=any?'none':'block';
+  });
+}
+search.addEventListener('input',applyFilters);
+filterButtons.forEach(btn=>btn.addEventListener('click',()=>{filterButtons.forEach(b=>b.classList.remove('active'));btn.classList.add('active');activeFilter=btn.dataset.filter;applyFilters();}));
+
+function sortContainer(container){
+  const cards=[...container.children];
+  const mode=sortSelect.value;
+  cards.sort((a,b)=>{if(mode==='az')return a.dataset.title.localeCompare(b.dataset.title);if(mode==='za')return b.dataset.title.localeCompare(a.dataset.title);return Number(b.dataset.score)-Number(a.dataset.score)});
+  cards.forEach(c=>container.appendChild(c));
+}
+sortSelect.addEventListener('change',()=>{sortContainer(document.querySelector('#tvGrid'));sortContainer(document.querySelector('#animeGrid'));});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%8)*35+'ms';io.observe(el)});
+
+const themeBtn=document.querySelector('#themeToggle');
+const saved=localStorage.getItem('grand-archive-theme');
+if(saved==='light')document.body.classList.add('light');
+function syncTheme(){themeBtn.textContent=document.body.classList.contains('light')?'☾':'☼'}syncTheme();
+themeBtn.addEventListener('click',()=>{document.body.classList.toggle('light');localStorage.setItem('grand-archive-theme',document.body.classList.contains('light')?'light':'dark');syncTheme()});
+
+// Gentle pointer light, deliberately subtle rather than neon.
+document.addEventListener('pointermove',e=>{document.documentElement.style.setProperty('--mx',(e.clientX/window.innerWidth*100)+'%');document.documentElement.style.setProperty('--my',(e.clientY/window.innerHeight*100)+'%')});
+</script>
+</body></html>
